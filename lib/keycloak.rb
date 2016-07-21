@@ -51,6 +51,7 @@ module OmniAuth
           "session_state" => @decoded_token['session_state'],
           "client_session" => @decoded_token['client_session'],
           "nonce" => @decoded_token['nonce'],
+          "original_nonce" => session[:nonce],
         }
         if @decoded_token['realm_access']
           hash['realm_access'] = @decoded_token['realm_access']['roles']
