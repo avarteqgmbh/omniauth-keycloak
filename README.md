@@ -38,8 +38,9 @@ keycloak_public_key)
 To verify if an Token is valid:
 ```ruby
 begin
-      keycloak_token.verify!(:issuer => "issuer", :client_id => "clientid", nonce: "nonce")
-rescue KeycloakToken::InvalidToken => e
+      nonce = env['omniauth.auth']['info']['original_nonce']
+      keycloak_token.verify!(:issuer => "issuer", :client_id => "clientid", nonce: nonce)
+rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
 end
 ``` 
 
