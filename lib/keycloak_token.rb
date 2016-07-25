@@ -7,14 +7,15 @@ module OmniauthKeycloak
     class InvalidToken < Exception; end
     KEYS = [:jti, :exp, :iat, :iss, :aud, :sub, :nbf, :azp, :nonce, :allowed_origins, :resource_access, :realm_access]
 
-    attr_reader :token, :decoded_token, :public_key
+    attr_reader :token, :decoded_token, :public_key, :client_name
     attr_accessor :jti, :exp, :iat, :iss, :aud, :sub
     attr_accessor :nbf, :azp, :nonce, :allowed_origins, :resource_access, :realm_access
     attr_accessor :attributes
 
-    def initialize(token,public_key)
+    def initialize(token,public_key,client_name)
         @token = token
         @public_key = public_key
+        @client_name = client_name
         @decoded_token = decode_token[0]  #array[0] = attributes, array[1] = algorithm
         KEYS.each do |key|
             self.send "#{key}=", @decoded_token[key.to_s]
@@ -32,8 +33,13 @@ module OmniauthKeycloak
       end
     end
 
-    #return hash with clientname => roles
+    #get all roles  for current user, realm and client roles
     def roles
+      client_roles(@client_name) + realm_roles
+    end
+
+    #return hash with clientname => roles
+    def roles_hash
       hash = {}
       if resource_access
           resource_access.each do |client|
@@ -53,7 +59,7 @@ module OmniauthKeycloak
     end
 
     def client_roles(client_name)
-      r = roles[client_name]
+      r = roles_hash[client_name]
       r ||= []
     end
 
