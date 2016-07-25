@@ -32,7 +32,8 @@ You can use the class KeycloakToken for easy access token handling:
 ```ruby
 keycloak_token = OmniauthKeycloak::KeycloakToken.new(
 env['omniauth.auth']['credentials']['token'],
-keycloak_public_key)
+keycloak_public_key,
+"client_name")
 ```   
 
 To verify if an Token is valid:
@@ -55,7 +56,8 @@ Get original token:
 ``` 
 Get roles:
 ```ruby
-  keycloak_token.roles  # returns hash with clientname => roles
+  keycloak_token.roles #get user roles from current client and realm roles 
+  keycloak_token.roles_hash  # returns hash with clientname => roles for all clients
   keycloak_token.role?("client_name"," role_name",use_realm_roles = false) #check if role exist, with or without realm roles
   keycloak_token.client_roles("clientname") # get all user roles on this client
   keycloak_token.realm_roles # get all realm roles
