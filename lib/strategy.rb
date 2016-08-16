@@ -24,7 +24,7 @@ module OmniAuth
 
 
       def callback_phase
-        byebug
+        #look at omniauth-oauth2 callback_phase
         error = request.params["error_reason"] || request.params["error"]
         if error
           fail!(error, CallbackError.new(request.params["error"], request.params["error_description"] || request.params["error_reason"], request.params["error_uri"]))
@@ -36,8 +36,7 @@ module OmniAuth
           begin
             @decoded_token = decode_token[0]
             OmniAuth::Strategy.instance_method(:callback_phase).bind(self).call
-          rescue Exception => e
-            byebug
+          rescue JWT::VerificationError => e
             fail!(:VerificationError, CallbackError.new(:VerificationError, e.message))
           end
 
@@ -53,26 +52,15 @@ module OmniAuth
 
 
       uid do
-        byebug
-        #@decode_token = decode_token[0]
-
-      if @decoded_token
-          @decoded_token['sub']
-         end
+        @decoded_token['sub']
       end
 
       credentials do
-        if @decoded_token
-          {"id_token" => access_token.params['id_token'],
-          "decoded_access_token" => @decoded_token }
-        else
-          {}
-        end
+        {"id_token" => access_token.params['id_token'],
+        "decoded_access_token" => @decoded_token }
       end
 
       info do
-          byebug
-        if @decoded_token
           hash = {
             "name" => @decoded_token['name'],
             "preffered_username" => @decoded_token['preferred_username'],
@@ -98,9 +86,6 @@ module OmniAuth
           end
 
           hash
-        else
-          {}
-        end
       end
 
       def get_token
@@ -108,13 +93,8 @@ module OmniAuth
       end
 
       def decode_token
-        #begin
-        #  byebug
-          key =  OpenSSL::PKey::RSA.new(Base64.decode64(options[:public_key]))
-          JWT.decode get_token,key, true, { :algorithm => 'RS256' }
-        #rescue Exception => e
-        #  return fail!(:invalid_site, CallbackError.new(:invalid_site, "OAuth endpoint is not a myshopify site."))
-        #end
+        key =  OpenSSL::PKey::RSA.new(Base64.decode64(options[:public_key]))
+        JWT.decode get_token,key, true, { :algorithm => 'RS256' }
       end
 
       def verify!(expected = {})
