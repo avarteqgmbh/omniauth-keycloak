@@ -73,7 +73,7 @@ module OmniauthKeycloak
     end
 
     def decode_token
-      JWT.decode @token, OpenSSL::PKey::RSA.new(@public_key), true, { :algorithm => 'RS256' }
+      JWT.decode @token, OpenSSL::PKey::RSA.new(Base64.decode64(@public_key)), true, { :algorithm => 'RS256' }
     end
 
     def expired?
@@ -110,6 +110,7 @@ module OmniauthKeycloak
 
     #verify if token is valid
     def verify!(expected = {})
+      byebug
       @decoded_token['exp'].to_i > Time.now.to_i &&
       @decoded_token['iss'] == expected[:issuer] &&
       Array(@decoded_token['aud']).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
