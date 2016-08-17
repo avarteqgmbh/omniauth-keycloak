@@ -110,7 +110,6 @@ module OmniauthKeycloak
 
     #verify if token is valid
     def verify!(expected = {})
-      byebug
       @decoded_token['exp'].to_i > Time.now.to_i &&
       @decoded_token['iss'] == expected[:issuer] &&
       Array(@decoded_token['aud']).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
