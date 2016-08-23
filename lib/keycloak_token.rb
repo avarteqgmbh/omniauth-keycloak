@@ -1,22 +1,30 @@
 #This class parses an keycloak access token and extracts the information.
 #To do this a public key from keycloak is needed
-#After extracting you can access the informations or the user roles and use the
+#After extracting you can access the informations and the user roles and use the
 #verify method to verify if an token is valid.
+#This class depends on some environment variables:
+# ENV[keycloak_client_id]
+# ENV[keycloak_client_secret]
+# ENV[keycloak_token_endpoint]
+# ENV[keycloak_public_key]
+# ENV[keycloak_url]
+
 module OmniauthKeycloak
   class KeycloakToken
     class InvalidToken < Exception; end
     KEYS = [:jti, :exp, :iat, :iss, :aud, :sub, :nbf, :azp, :nonce, :allowed_origins, :resource_access, :realm_access]
 
-    attr_reader :token, :decoded_token, :public_key, :client_name, :client_secret
+    attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url
     attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :refresh_token
     attr_accessor :nbf, :azp, :nonce, :allowed_origins, :resource_access, :realm_access
     attr_accessor :attributes
 
-    def initialize(token,public_key,client_name,client_secret)
+    def initialize(token)
         @token = token
-        @public_key = public_key
-        @client_name = client_name
-        @client_secret = client_secret
+        @public_key = ENV['keycloak_public_key']
+        @client_id = ENV['keycloak_client_id']
+        @client_secret = ENV['keycloak_client_secret']
+        @keycloak_url = ENV["keycloak_url"]
         @decoded_token = decode_token[0]  #array[0] = attributes, array[1] = algorithm
         KEYS.each do |key|
             self.send "#{key}=", @decoded_token[key.to_s]
@@ -36,7 +44,7 @@ module OmniauthKeycloak
 
     #get all roles  for current user, realm and client roles
     def roles
-      client_roles(@client_name) + realm_roles
+      client_roles + realm_roles
     end
 
     #return hash with clientname => roles
@@ -50,8 +58,8 @@ module OmniauthKeycloak
       hash
     end
 
-    def role?(client_name,role_name,use_realm_roles = false)
-        roles = client_roles(client_name)
+    def role?(role_name,use_realm_roles = false)
+        roles = client_roles
         if use_realm_roles
           roles = roles + realm_roles
         end
@@ -59,9 +67,8 @@ module OmniauthKeycloak
         roles.include?(role_name)
     end
 
-    def client_roles(client_name)
-      r = roles_hash[client_name]
-      r ||= []
+    def client_roles
+      roles_hash[@client_id] || []
     end
 
     def realm_roles
@@ -81,19 +88,18 @@ module OmniauthKeycloak
     end
 
     #returns new KeycloakToken if refresh token is available
-    #@token_endpoint token endpoint keycloak
     #@options :refresh_token refreshtoken or @refresh_token
     #
-    def refresh(token_endpoint,options = {})
+    def refresh(options = {})
       if options[:refresh_token]
           refresh_token = options.delete(:refresh_token)
       else
           refresh_token = @refresh_token
       end
-      options[:token_url] = token_endpoint
+      options[:token_url] = ENV['keycloak_token_endpoint']
       new_token = oauth2token({refresh_token: refresh_token,expires_at: @exp},options).refresh!
 
-      keycloak_token = OmniauthKeycloak::KeycloakToken.new(new_token.token,@public_key,@client_name,@client_secret)
+      keycloak_token = OmniauthKeycloak::KeycloakToken.new(new_token.token)
       if new_token.refresh_token
         keycloak_token.refresh_token = new_token.refresh_token
       end
@@ -110,19 +116,32 @@ module OmniauthKeycloak
 
     #verify if token is valid
     def verify!(expected = {})
-      @decoded_token['exp'].to_i > Time.now.to_i &&
-      @decoded_token['iss'] == expected[:issuer] &&
-      Array(@decoded_token['aud']).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
-      @decoded_token['nonce'] == expected[:nonce] or
-      raise InvalidToken.new('Invalid ID Token')
+      expected[:issuer] ||= @keycloak_url
+      expected[:client_id] ||= @client_id
+      expected[:nonce] ||= @nonce
+
+      if exp.to_i <= Time.now.to_i
+        raise InvalidToken.new("Token expired. is: #{exp}, expected: <= #{Time.now.to_i}")
+      end
+      if iss != expected[:issuer]
+        raise InvalidToken.new("Invalid issuer. is: #{iss}, expected: #{expected[:issuer]}")
+      end
+      if !Array(aud).include?(expected[:client_id])
+        raise InvalidToken.new("Invalid audience. is: #{aud}, expected: #{expected[:client_id]}")
+      end
+      if nonce != expected[:nonce]
+        raise InvalidToken.new("Invalid nonce. is: #{nonce}, expected: #{expected[:nonce]}")
+      end
+      return true
+
     end
 
     #Get KeycloakToken with client credentials grant type
-    def self.client_credentials(client_id,client_secret,token_endpoint,public_key)
-      client = OAuth2::Client.new(client_id,client_secret,{token_url: token_endpoint})
+    def self.client_credentials
+      client = OAuth2::Client.new(ENV['keycloak_client_id'],ENV['keycloak_client_secret'],{token_url: ENV['keycloak_token_endpoint']})
       token  = client.client_credentials.get_token
-      OmniauthKeycloak::KeycloakToken.new(token.token,public_key,client_id,client_secret)
-      #no refesh token for client credetials grant type
+      OmniauthKeycloak::KeycloakToken.new(token.token)
+      #no refesh token for client credentials grant type
     end
   end
 end
