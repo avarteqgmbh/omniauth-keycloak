@@ -8,6 +8,15 @@ Just add the gem to your gemfile
 gem 'omniauth-keycloak'
 ```
 
+Configure omniauth in config/initializers/omniauth.rb
+```ruby
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :keycloak, ENV["keycloak_client_id"], ENV["keycloak_client_secret"], scope: "openid", public_key: ENV["keycloak_public_key"],client_options: {:site => ENV["keycloak_url"], :authorize_url => ENV["keycloak_authorize_url"], :token_url => ENV["keycloak_token_endpoint"]}
+end
+```
+
+To use this gem you have to provide the env variables listet above. To do this, you can use the Figaro gem for example.
+
 If you use devise, specify the Keycloak Server within the initializer:
 
 ```ruby
@@ -20,22 +29,30 @@ Devise.setup do |config|
       scope:          "openid",·                                  
       public_key:     ENV["keycloak_public_key"],                 
       client_options: {                                           
-        :site          => ENV["keycloak_site"],·                  
+        :site          => ENV["keycloak_url"],·                  
         :authorize_url => ENV["keycloak_authorize_url"],·         
-        :token_url     => ENV["keycloak_token_url"]               
+        :token_url     => ENV["keycloak_token_endpoint"]               
       }                                                           
     })                                                            
 ```
+
+Add route for callback e.g:
+
+```ruby
+get '/auth/keycloak/callback' => 'application#callback'
+```
+Start the authentication by redirecting the user to /auth/keycloak
+```ruby
+redirect_to "/auth/keycloak" 
+```
+
 
 You can use the class KeycloakToken for easy AccessToken handling:
 
 ```ruby
 begin
-  keycloak_token = OmniauthKeycloak::KeycloakToken.new(
-    env['omniauth.auth']['credentials']['token'],
-    keycloak_public_key,
-    "client_name",
-    "client_secret")
+  access_token = env['omniauth.auth']['credentials']['token'] #get acces Token from omniauth in callback
+  keycloak_token = OmniauthKeycloak::KeycloakToken.new(access_token)
 rescue JWT::VerificationError
   #Signature verification raised
 end
@@ -49,6 +66,7 @@ begin
 rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
 end
 ``` 
+If no options are passed to verify, the values from env will be used. (issuer will be ENV[keycloak_url])
 
 Get JWT claims:
 ```ruby
@@ -71,8 +89,8 @@ Get roles:
 ```ruby
   keycloak_token.roles #get user roles from current client and realm roles 
   keycloak_token.roles_hash  # returns hash with clientname => roles for all clients
-  keycloak_token.role?("client_name"," role_name",use_realm_roles = false) #check if role exist, with or without realm roles
-  keycloak_token.client_roles("clientname") # get all user roles on this client
+  keycloak_token.role?(role_name,use_realm_roles = false) #check if role exist, with or without realm roles
+  keycloak_token.client_roles # get all user roles for this client
   keycloak_token.realm_roles # get all realm roles
 ```
 
@@ -84,7 +102,7 @@ Send request with Token (See omniauth2 gem for other http methods):
 Get Token with client credentials grant type (omniauth strategy is not used):
 ```ruby
   begin
-    token = OmniauthKeycloak::KeycloakToken.client_credentials("client_id","client_secret","keycloak_token_endpoint","keycloak_public_key")
+    token = OmniauthKeycloak::KeycloakToken.client_credentials
   rescue JWT::VerificationError
     #Signature verification raised
   end
@@ -99,9 +117,11 @@ keycloak_token.refresh_token = env['omniauth.auth']['credentials']['refresh_toke
 keycloak_token.expired? #check if access token is expired
 
 begin
-          new_token = keycloak_token.refresh("keycloak_token_endpoint")
+          new_token = keycloak_token.refresh
 rescue OAuth2::Error => e
-          #Refresh Token expired, use strategy again to get access token
+          #Refresh Token or keycloak session expired, use strategy again to get access token
+rescue JWT::VerificationError => e
+          #Signature verification raised
 end
 
 ```
