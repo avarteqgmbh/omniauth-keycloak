@@ -35,6 +35,7 @@ module OmniAuth
           self.access_token = access_token.refresh! if access_token.expired?
           begin
             @decoded_token = decode_token[0]
+            #call super from grandparent instead parent
             OmniAuth::Strategy.instance_method(:callback_phase).bind(self).call
           rescue JWT::VerificationError => e
             fail!(:VerificationError, CallbackError.new(:VerificationError, e.message))
