@@ -95,7 +95,7 @@ module OmniAuth
 
       def decode_token
         key =  OpenSSL::PKey::RSA.new(Base64.decode64(options[:public_key]))
-        JWT.decode get_token,key, true, { :algorithm => 'RS256' }
+        JWT.decode(get_token,key, true, { :algorithm => 'RS256' })
       end
 
       def verify!(expected = {})
