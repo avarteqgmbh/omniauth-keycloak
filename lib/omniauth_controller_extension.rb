@@ -20,7 +20,6 @@ module OmniauthKeycloak
       end
 
       def logout_keycloak
-        byebug
         clear_session
         url = ENV['keycloak_url'] +  "/protocol/openid-connect/logout"
         redirect_to url

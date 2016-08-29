@@ -40,7 +40,6 @@ module OmniauthKeycloak
             token
           end
         else
-          byebug
           nil
         end
       end

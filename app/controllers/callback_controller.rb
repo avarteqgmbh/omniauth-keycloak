@@ -1,7 +1,7 @@
 
 #require_dependency "application_controller"
 #module OmniauthKeycloak
-  class KeycloakCallbackController <  ApplicationController
+  class CallbackController <  ActionController::Base
     include OmniauthKeycloak::OmniauthControllerExtension
 
     def callback
