@@ -5,7 +5,7 @@
 
 Just add the gem to your gemfile
 ```ruby
-gem 'omniauth-keycloak'
+gem 'omniauth-keycloak', git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
 ```
 
 Configure omniauth in config/initializers/omniauth.rb
@@ -126,4 +126,61 @@ end
 
 ```
 
+## Use gem as engine
 
+Add the gem to your gemfile
+```ruby
+gem 'omniauth-keycloak', git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
+```
+provide the following env variables:
+```
+keycloak_client_id
+keycloak_client_secret
+keycloak_public_key
+keycloak_url             e.g https://keycloakprovider:host/auth/realms/master
+keycloak_authorize_url   e.g https://keycloakprovider:host/auth/realms/master/protocol/openid-connect/auth
+keycloak_token_endpoint  e.g https://keycloakprovider:host/auth/realms/master/protocol/openid-connect/token
+```
+
+Configure the engine
+```
+File: config/initializers/omniauth.rb
+OmniauthKeycloak.config.allowed_realm_roles  = ['roles']
+OmniauthKeycloak.config.allowed_client_roles = ['clientroles']
+OmniauthKeycloak.config.token_cache_expires_in = 10.minutes
+OmniauthKeycloak.config.allowed_client_roles_api = ['roles']
+OmniauthKeycloak.config.allowed_realm_roles_api = ['']
+OmniauthKeycloak.config.login_redirect_url = :root
+```
+
+A user is able to acess a page if he has either a allowed role in allowed_realm_roles or in allowed_client_roles. The same applies to users/clients with api roles for api access.
+Use token_cache_expires_in to set the maximum lifetime for an access token.
+
+To secure your client:
+```ruby
+  class ApplicationController < ActionController::Base
+    include OmniauthKeycloak::ControllerExtension
+  end
+```
+
+To secure your api:
+```ruby
+  class ApiController < ActionController::Base
+    include OmniauthKeycloak::ApiControllerExtension
+  end
+```
+
+To skip validation:
+```ruby
+  class ApplicationController < ActionController::Base
+    include OmniauthKeycloak::ApiControllerExtension
+    skip_before_filter :authenticate, :only => [:index]
+  end
+```
+
+You can access the current user with
+```ruby
+ current_user
+ current_user.client_roles
+ ..
+```
