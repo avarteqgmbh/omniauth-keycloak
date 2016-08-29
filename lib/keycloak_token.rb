@@ -7,17 +7,16 @@
 # ENV[keycloak_client_secret]
 # ENV[keycloak_token_endpoint]
 # ENV[keycloak_public_key]
-# ENV[keycloak_url]
+# ENV[keycloak_url] :client_session,
 
 module OmniauthKeycloak
   class KeycloakToken
     class InvalidToken < Exception; end
-    KEYS = [:jti, :exp, :iat, :iss, :aud, :sub, :nbf, :azp, :nonce, :allowed_origins, :resource_access, :realm_access]
+    KEYS = [:jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access]
 
     attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url
-    attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :refresh_token
-    attr_accessor :nbf, :azp, :nonce, :allowed_origins, :resource_access, :realm_access
-    attr_accessor :attributes
+    attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access
+    attr_accessor :attributes, :refresh_token
 
     def initialize(token)
         @token = token
@@ -29,6 +28,7 @@ module OmniauthKeycloak
         KEYS.each do |key|
             self.send "#{key}=", @decoded_token[key.to_s]
         end
+        @allowed_origins = @decoded_token["allowed-origins"]
         #instance_variable_set("@#{key}", @decoded_token[key.to_s])
         set_attributes
     end
@@ -36,7 +36,7 @@ module OmniauthKeycloak
     #extract all user attributes
     def set_attributes
       @attributes = {}
-      attr = @decoded_token.keys - KEYS.map {|k| k.to_s}
+      attr = @decoded_token.keys - KEYS.map {|k| k.to_s} - ["allowed-origins"]
       attr.each do |attribute|
         @attributes[attribute] = @decoded_token[attribute]
       end
