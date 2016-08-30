@@ -1,7 +1,4 @@
-
-#require_dependency "application_controller"
-#module OmniauthKeycloak
-  class CallbackController <  ActionController::Base
+  class OmniauthKeycloak::CallbackController <  ApplicationController
     include OmniauthKeycloak::OmniauthControllerExtension
 
     def callback
@@ -34,10 +31,6 @@
     end
 
     def omniauth_error_callback
-      #jwt signature invalid while omniauth strategy
-      #env['omniauth.error'] = exception
-      #env['omniauth.error.type'] = message_key.to_sym
-      #env['omniauth.error.strategy'] = self
       if env['omniauth.error.type'] == :VerificationError
         flash.now[:error] = "Die Signatur des Tokens ist fehlerhaft."
         render :template => 'layouts/error'
@@ -61,6 +54,4 @@
       render :nothing => true, :status => 200, :content_type => 'text/html'
     end
 
-
-  #end
 end
