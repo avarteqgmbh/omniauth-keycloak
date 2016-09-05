@@ -34,12 +34,15 @@
       if env['omniauth.error.type'] == :VerificationError
         flash.now[:error] = "Die Signatur des Tokens ist fehlerhaft."
         render :template => 'layouts/error'
+      elsif env['omniauth.error.type'] == :csrf_detected
+        flash.now[:error] = "CSRF detected"
+        render :template => 'layouts/error'
+      elsif  env['omniauth.error.type'] == :access_denied
+        flash.now[:error] = "access denied, user has not granted permission for this app to use his data"
+        render :template => 'layouts/error'
       else
         render text: "#{env['omniauth.error']}\n #{env['omniauth.error.type']} \n #{env['omniauth.error.strategy']}"
       end
-
-      #fehlt: OmniAuth::Strategies::OAuth2::CallbackError csrf_detected
-
     end
 
     def revoke
