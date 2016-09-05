@@ -1,10 +1,20 @@
 Rails.application.routes.draw do
   get '/auth/keycloak/callback' => 'omniauth_keycloak/callback#callback'
 
-  get '/login' => 'omniauth_keycloak/sessions#login_user'
-  get '/logout' => 'omniauth_keycloak/sessions#logout_user'
-  get '/session_logout' => 'omniauth_keycloak/sessions#logout_session'
+#namespace :omniauth_keycloak do
+# resource :session, only: [] do
+#   collection do
+#     get :login_user,  as: 'login'
+#     get :logout_user, as: 'logout'
+#   end
+# end
+#end
 
-  post '/k_push_not_before' => 'omniauth_keycloak/sessions#revoke'
-  post '/k_logout' => 'omniauth_keycloak/session#logout_user_callback'
+  get '/login' => 'omniauth_keycloak/sessions#login_user'
+  get '/logout' => 'omniauth_keycloak/sessions#logout_user', as: :session
+
+  #get '/session_logout' => 'omniauth_keycloak/sessions#logout_session'
+
+  post '/k_push_not_before' => 'omniauth_keycloak/callback#revoke'
+  post '/k_logout' => 'omniauth_keycloak/callback#logout_user_callback'
 end
