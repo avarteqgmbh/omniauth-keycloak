@@ -8,11 +8,11 @@ class OmniauthKeycloak::SessionsController < ApplicationController
   end
 
   def logout_user
-    logout
+    logout_keycloak
   end
 
-  def logout_session
-      logout_keycloak
-  end
+  #def logout_session
+  #    logout_keycloak
+  #end
 
 end
