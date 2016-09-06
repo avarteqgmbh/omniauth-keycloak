@@ -12,10 +12,11 @@
 module OmniauthKeycloak
   class KeycloakToken
     class InvalidToken < Exception; end
-    KEYS = [:jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access]
+    KEYS = [:jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access, :auth_time, :acr]
 
     attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url
-    attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access
+    # claims see http://openid.net/specs/openid-connect-core-1_0.html#IDToken and additional specifications
+    attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access, :auth_time, :acr
     attr_accessor :attributes, :refresh_token
 
     def initialize(token)
@@ -31,15 +32,6 @@ module OmniauthKeycloak
         @allowed_origins = @decoded_token["allowed-origins"]
         #instance_variable_set("@#{key}", @decoded_token[key.to_s])
         set_attributes
-    end
-
-    #extract all user attributes
-    def set_attributes
-      @attributes = {}
-      attr = @decoded_token.keys - KEYS.map {|k| k.to_s} - ["allowed-origins"]
-      attr.each do |attribute|
-        @attributes[attribute] = @decoded_token[attribute]
-      end
     end
 
     #get all roles  for current user, realm and client roles
@@ -77,10 +69,6 @@ module OmniauthKeycloak
       else
         []
       end
-    end
-
-    def decode_token
-      JWT.decode @token, OpenSSL::PKey::RSA.new(Base64.decode64(@public_key)), true, { :algorithm => 'RS256' }
     end
 
     def expired?
@@ -143,5 +131,20 @@ module OmniauthKeycloak
       OmniauthKeycloak::KeycloakToken.new(token.token)
       #no refesh token for client credentials grant type
     end
+
+    private
+    #extract all user attributes
+    def set_attributes
+      @attributes = {}
+      attr = @decoded_token.keys - KEYS.map {|k| k.to_s} - ["allowed-origins"]
+      attr.each do |attribute|
+        @attributes[attribute] = @decoded_token[attribute]
+      end
+    end
+
+    def decode_token
+      JWT.decode @token, OpenSSL::PKey::RSA.new(Base64.decode64(@public_key)), true, { :algorithm => 'RS256' }
+    end
+
   end
 end
