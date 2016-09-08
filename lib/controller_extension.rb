@@ -12,7 +12,11 @@ module OmniauthKeycloak
       protected
 
       def authenticate
-        redirect_to "/auth/keycloak" unless current_user
+        unless current_user
+          redirect_to "/auth/keycloak"
+          return false
+        end
+        return true
       end
 
       def current_user
@@ -31,6 +35,7 @@ module OmniauthKeycloak
           new_token = token.refresh
           new_token.verify!
           Rails.cache.write(new_token.sub,new_token,:expires_in => OmniauthKeycloak.config.token_cache_expires_in)
+          return new_token
         rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
           flash[:error] = "token verification failure"
           render :template => 'layouts/error'
@@ -38,14 +43,13 @@ module OmniauthKeycloak
           #Refresh Token expired, neues Access Token bei Keycloak anfordern
           #Aktion des Users muss neu gestartet werden
           clear_session
-          redirect_to "/auth/keycloak"
+          return
         rescue JWT::VerificationError => e
           #Signatur des Access Tokens ungültig
           clear_session
-          redirect_to "/auth/keycloak"
-
+          return
         end
-        new_token
+        return
       end
 
       def clear_session
