@@ -7,6 +7,7 @@ module OmniauthKeycloak
     included do
       rescue_from JWT::ExpiredSignature, with: :signature_expired
       rescue_from JWT::VerificationError, with: :invalid_signature
+      rescue_from JWT::DecodeError, with: :decode_error
 
       def signature_expired
            render json: 'Signature expired', status: 400
@@ -14,6 +15,10 @@ module OmniauthKeycloak
 
       def invalid_signature
         render json: 'Invalid Signature', status: 400
+      end
+
+      def decode_error
+        render json: 'Token decode error', status: 400
       end
 
       def authenticate
