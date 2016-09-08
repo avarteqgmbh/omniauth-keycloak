@@ -151,11 +151,12 @@ OmniauthKeycloak.config.token_cache_expires_in = 10.minutes
 OmniauthKeycloak.config.allowed_client_roles_api = ['roles']
 OmniauthKeycloak.config.allowed_realm_roles_api = ['']
 OmniauthKeycloak.config.login_redirect_url = :root
-OmniauthKeycloak.config.logout_redirect_url = :root
+OmniauthKeycloak.config.logout_redirect_url = "http://address:port/"
 ```
 
 A user is able to acess a page if he has either a allowed role in allowed_realm_roles or in allowed_client_roles. The same applies to users/clients with api roles for api access.
 Use token_cache_expires_in to set the maximum lifetime for an access token.
+logout_redirect_url can be used to configure the redirect after an logout. This url  hast to be valid in keycloak as valid redirect_urls, default is "/"
 
 To secure your client:
 ```ruby
