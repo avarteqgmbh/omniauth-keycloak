@@ -185,3 +185,9 @@ You can access the current user with
  current_user.client_roles
  ..
 ```
+
+The engine adds the following endpoints to your application
+```
+ /login   redirects the user to keycloaks login page
+ /logout  logs out the user from the app and deletes the keycloak session
+```
