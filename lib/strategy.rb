@@ -9,9 +9,9 @@ module OmniAuth
 
 
       option :client_options, {
-        :site => 'http://localhost:8080/auth/realms/master',
-        :authorize_url => 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
-        :token_url => 'http://localhost:8080/auth/realms/master/protocol/openid-connect/token'
+        site:          'http://localhost:8080/auth/realms/master',
+        authorize_url: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
+        token_url:     'http://localhost:8080/auth/realms/master/protocol/openid-connect/token'
       }
 
       option :public_key
@@ -57,24 +57,26 @@ module OmniAuth
       end
 
       credentials do
-        {"id_token" => access_token.params['id_token'],
-        "decoded_access_token" => @decoded_token }
+        {
+          "id_token"             => access_token.params['id_token'],
+          "decoded_access_token" => @decoded_token 
+        }
       end
 
       info do
           hash = {
-            "name" => @decoded_token['name'],
-            "preffered_username" => @decoded_token['preferred_username'],
-            "given_name" => @decoded_token['given_name'],
-            "family_name" => @decoded_token['family_name'],
-            "email" => @decoded_token['email'],
-            "exp" => @decoded_token['exp'],
-            "iat"=> @decoded_token['iat'],
-            "sub" => @decoded_token['sub'],
-            "session_state" => @decoded_token['session_state'],
-            "client_session" => @decoded_token['client_session'],
-            "nonce" => @decoded_token['nonce'],
-            "original_nonce" => session[:nonce]
+            "name"                => @decoded_token['name'],
+            "preffered_username"  => @decoded_token['preferred_username'],
+            "given_name"          => @decoded_token['given_name'],
+            "family_name"         => @decoded_token['family_name'],
+            "email"               => @decoded_token['email'],
+            "exp"                 => @decoded_token['exp'],
+            "iat"                 => @decoded_token['iat'],
+            "sub"                 => @decoded_token['sub'],
+            "session_state"       => @decoded_token['session_state'],
+            "client_session"      => @decoded_token['client_session'],
+            "nonce"               => @decoded_token['nonce'],
+            "original_nonce"      => session[:nonce]
           }
           if @decoded_token['realm_access']
             hash['realm_access'] = @decoded_token['realm_access']['roles']

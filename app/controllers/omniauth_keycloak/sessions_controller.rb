@@ -1,6 +1,7 @@
 class OmniauthKeycloak::SessionsController < ApplicationController
   include OmniauthKeycloak::OmniauthControllerExtension
 
+  layout false
   skip_before_filter :authenticate, :only => [:login_user, :logout_user, :logout_session]
 
   def login_user

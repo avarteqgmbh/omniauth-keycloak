@@ -1,5 +1,3 @@
-module OmniauthKeycloak
-  class ApplicationController < ActionController::Base
+class OmniauthKeycloak::ApplicationController < ActionController::Base
     
-  end
 end

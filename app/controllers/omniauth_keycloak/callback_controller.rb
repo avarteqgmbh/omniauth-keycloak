@@ -1,43 +1,44 @@
-  class OmniauthKeycloak::CallbackController <  ApplicationController
-    include OmniauthKeycloak::OmniauthControllerExtension
+class OmniauthKeycloak::CallbackController <  ApplicationController
+  include OmniauthKeycloak::OmniauthControllerExtension
+  layout false
 
-    def callback
-      acess_token 		= env['omniauth.auth']['credentials']['token']
-      nonce           = env['omniauth.auth']['info']['original_nonce']
-      refresh_token   = env['omniauth.auth']['credentials']['refresh_token']
+  def callback
+    acess_token 		= env['omniauth.auth']['credentials']['token']
+    nonce           = env['omniauth.auth']['info']['original_nonce']
+    refresh_token   = env['omniauth.auth']['credentials']['refresh_token']
 
-      begin
-        token = OmniauthKeycloak::KeycloakToken.new(acess_token)
+    begin
+      token = OmniauthKeycloak::KeycloakToken.new(acess_token)
 
-        token.verify!(nonce: nonce)
+      token.verify!(nonce: nonce)
 
-        if check_client_roles(token) or check_realm_roles(token)
-             login(token,refresh_token)
-             if OmniauthKeycloak.config.login_redirect_url
-               redirect_to OmniauthKeycloak.config.login_redirect_url
-             else
-               redirect_to root_path
-             end
+      if check_client_roles(token) or check_realm_roles(token)
+        login(token,refresh_token)
+        if OmniauthKeycloak.config.login_redirect_url
+          redirect_to OmniauthKeycloak.config.login_redirect_url
         else
-             flash.now[:error] = "Access denied"
-             render :template => 'layouts/error'
+          redirect_to main_app.root_path
         end
-
-      rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
-        flash[:error] = "#{e}"
+      else
+        flash.now[:error] = "Access denied"
         render :template => 'layouts/error'
       end
 
+    rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
+      flash[:error] = "#{e}"
+      render :template => 'layouts/error'
     end
 
-    def omniauth_error_callback
-      if env['omniauth.error.type'] == :VerificationError
-        flash.now[:error] = "Die Signatur des Tokens ist fehlerhaft."
-        render :template => 'layouts/error'
-      elsif env['omniauth.error.type'] == :csrf_detected
-        flash.now[:error] = "CSRF detected"
-        render :template => 'layouts/error'
-      elsif  env['omniauth.error.type'] == :access_denied
+  end
+
+  def omniauth_error_callback
+    if env['omniauth.error.type'] == :VerificationError
+      flash.now[:error] = "Die Signatur des Tokens ist fehlerhaft."
+      render :template => 'layouts/error'
+    elsif env['omniauth.error.type'] == :csrf_detected
+      flash.now[:error] = "CSRF detected"
+      render :template => 'layouts/error'
+    elsif  env['omniauth.error.type'] == :access_denied
         flash.now[:error] = "access denied, user has not granted permission for this app to use his data"
         render :template => 'layouts/error'
       else
