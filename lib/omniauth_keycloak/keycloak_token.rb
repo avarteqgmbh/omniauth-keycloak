@@ -126,6 +126,14 @@ class OmniauthKeycloak::KeycloakToken
 
   end
 
+
+  # Get KeycloakToken with passwort grant type
+  def password(user, password)
+    client = OAuth2::Client.new(OmniauthKeycloak.config.client_id,OmniauthKeycloak.config.client_secret,{token_url: OmniauthKeycloak.config.token_endpoint})
+    token  = client.password.get_token(user, password)
+    OmniauthKeycloak::KeycloakToken.new(token.token)
+  end # .password
+
   #Get KeycloakToken with client credentials grant type
   def self.client_credentials
     client = OAuth2::Client.new(OmniauthKeycloak.config.client_id,OmniauthKeycloak.config.client_secret,{token_url: OmniauthKeycloak.config.token_endpoint})
