@@ -47,4 +47,5 @@ class OmniauthKeycloak::Config
   def token_endpoint
     ENV['keycloak_token_endpoint'] || "#{self.realm_url}/protocol/openid-connect/token"
   end # #token_endpoint
+
 end

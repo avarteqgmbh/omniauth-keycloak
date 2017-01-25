@@ -14,17 +14,20 @@ class OmniauthKeycloak::CallbackController <  ApplicationController
 
       if check_client_roles(token) or check_realm_roles(token)
         login(token,refresh_token)
+        OmniauthKeycloak.log('Redirect after login')
         if OmniauthKeycloak.config.login_redirect_url
           redirect_to OmniauthKeycloak.config.login_redirect_url
         else
           redirect_to main_app.root_path
         end
       else
+        OmniauthKeycloak.log('Access denied')
         flash.now[:error] = "Access denied"
         render :template => 'layouts/error'
       end
 
     rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
+      OmniauthKeycloak.log(e)
       flash[:error] = "#{e}"
       render :template => 'layouts/error'
     end
