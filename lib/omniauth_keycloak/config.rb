@@ -1,11 +1,13 @@
 class OmniauthKeycloak::Config
   attr_accessor :allowed_realm_roles, :allowed_client_roles, :token_cache_expires_in, :login_redirect_url, :logout_redirect_url, :allowed_realm_roles_api, :allowed_client_roles_api
+  attr_writer   :scope
 
   def initialize(oidc_json = nil)
     @allowed_realm_roles = []
     @allowed_client_roles = []
     @allowed_realm_roles_api = []
     @allowed_client_roles_api = []
+    @scope = nil
     @token_cache_expires_in = 10.minutes
 
 
@@ -39,6 +41,11 @@ class OmniauthKeycloak::Config
   def realm
     ENV['keycloak_realm']         || @_oidc['realm']
   end # #realm
+
+  def scope
+    ENV['keycloak_scope'] || @scope
+    
+  end # #scope
 
   def realm_url
     "#{self.url}/realms/#{self.realm}"

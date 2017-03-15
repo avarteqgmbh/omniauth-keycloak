@@ -1,4 +1,7 @@
 # Changelog
+### 1.0.3 -  2017-03-15
+* make the open-ID scope configurable
+
 ### 1.0.2 -  2017-01-25
 * improove documentation and also logging on authorization failures
 
