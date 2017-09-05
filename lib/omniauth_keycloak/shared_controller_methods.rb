@@ -2,7 +2,7 @@ module OmniauthKeycloak::SharedControllerMethods
 
   protected
 
-  def get_token
+  def get_token(request)
     token = request.headers['HTTP_AUTHORIZATION']
     if token
       token['Bearer'] = '' if token.include?("Bearer")
