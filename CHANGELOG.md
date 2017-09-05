@@ -1,4 +1,8 @@
 # Changelog
+### 1.1.0 -  2017-09-05
+* add rakc middleware to make oauth2 authentication
+* Fix rack middleware (#1)
+
 ### 1.0.3 -  2017-03-15
 * make the open-ID scope configurable
 
