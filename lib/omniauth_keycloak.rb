@@ -1,6 +1,3 @@
-
-
-
 module OmniauthKeycloak
 
   autoload :Config,                      File.expand_path('../omniauth_keycloak/config', __FILE__)
@@ -9,6 +6,8 @@ module OmniauthKeycloak
   autoload :OmniauthControllerExtension, File.expand_path('../omniauth_keycloak/omniauth_controller_extension',__FILE__)
   autoload :ApiControllerExtension,      File.expand_path('../omniauth_keycloak/api_controller_extension',__FILE__)
   autoload :Engine,                      File.expand_path('../omniauth_keycloak/engine', __FILE__)
+  autoload :SharedControllerMethods,     File.expand_path('../omniauth_keycloak/shared_controller_methods', __FILE__)
+  autoload :Rack,                        File.expand_path('../omniauth_keycloak/rack', __FILE__)
 
   class << self
 
