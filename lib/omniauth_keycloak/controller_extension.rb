@@ -12,6 +12,7 @@ module OmniauthKeycloak::ControllerExtension
 
     def authenticate
       unless current_user
+        OmniauthKeycloak.log('Current User is blank')
         redirect_to "/auth/keycloak"
         return false
       end
@@ -19,10 +20,19 @@ module OmniauthKeycloak::ControllerExtension
     end
 
     def current_user
+      cached_token
+    end # #current_user
+
+    def cached_token
+      OmniauthKeycloak.log("Fetch #{session[:omniauth_keycloak_sub]}")
       token = Rails.cache.fetch(session[:omniauth_keycloak_sub])
-      return nil if !token
+      if !token
+        OmniauthKeycloak.log('No decodable Token')
+        return nil 
+      end
 
       if token.expired?
+        OmniauthKeycloak.log('Token expired')
         refresh_token(token)
       else
         token

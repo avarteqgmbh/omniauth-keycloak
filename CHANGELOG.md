@@ -1,4 +1,7 @@
 # Changelog
+### 1.1.1 -  2017-09-26
+* make usage of controller concern simpler and allow better overwrites
+
 ### 1.1.0 -  2017-09-05
 * add rakc middleware to make oauth2 authentication
 * Fix rack middleware (#1)

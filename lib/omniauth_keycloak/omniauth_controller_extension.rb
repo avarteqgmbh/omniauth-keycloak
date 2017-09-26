@@ -9,7 +9,7 @@ module OmniauthKeycloak::OmniauthControllerExtension
 
     def login(keycloak_token,refresh_token = nil)
       keycloak_token.refresh_token = refresh_token if refresh_token
-      Rails.cache.write(keycloak_token.sub,keycloak_token,:expires_in => OmniauthKeycloak.config.token_cache_expires_in)
+      Rails.cache.write(keycloak_token.sub,keycloak_token,:expires_in => OmniauthKeycloak.config.token_cache_expires_in.minutes)
       session[:omniauth_keycloak_sub] = keycloak_token.sub
     end
 
