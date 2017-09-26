@@ -22,8 +22,6 @@ module OmniauthKeycloak
       @config ||= ::OmniauthKeycloak::Config.new
     end # .config
 
-
-
     def log(msg)
       if defined? Rails
         Rails.logger.debug("[OmniauthKeycloak] #{msg}")
