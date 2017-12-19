@@ -3,8 +3,6 @@ class OmniauthKeycloak::Engine < ::Rails::Engine
 
 
   initializer "omniauth-keycloak.middleware" do |app|
-
-#    app.config.middleware.delete OmniAuth::Builder
     app.config.middleware.use OmniAuth::Builder do
 
       provider(:keycloak, OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, {
@@ -21,6 +19,6 @@ class OmniauthKeycloak::Engine < ::Rails::Engine
         OmniauthKeycloak::CallbackController.action(:omniauth_error_callback).call(env)
         #this will invoke the omniauth_error_callback action in ApplicationController.
       end
-    end
-  end
+    end unless OmniauthKeycloak.config.client_only 
+  end # initializer
 end

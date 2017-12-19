@@ -1,4 +1,7 @@
 # Changelog
+### 1.1.2 -  2017-12-19
+* allow only client usage for api clients
+
 ### 1.1.1 -  2017-09-26
 * make usage of controller concern simpler and allow better overwrites
 
