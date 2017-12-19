@@ -1,5 +1,5 @@
 class OmniauthKeycloak::Config
-  attr_accessor :allowed_realm_roles, :allowed_client_roles, :token_cache_expires_in, :login_redirect_url, :logout_redirect_url, :allowed_realm_roles_api, :allowed_client_roles_api
+  attr_accessor :allowed_realm_roles, :allowed_client_roles, :token_cache_expires_in, :login_redirect_url, :logout_redirect_url, :allowed_realm_roles_api, :allowed_client_roles_api, :client_only
   attr_writer   :scope
 
   def initialize(oidc_json = nil)
