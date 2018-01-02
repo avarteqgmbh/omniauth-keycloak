@@ -1,4 +1,7 @@
 # Changelog
+### 1.1.3 -  2018-01-02
+* remove explicite router require
+
 ### 1.1.2 -  2017-12-19
 * allow only client usage for api clients
 
