@@ -9,6 +9,9 @@ module OmniauthKeycloak
   autoload :SharedControllerMethods,     File.expand_path('../omniauth_keycloak/shared_controller_methods', __FILE__)
   autoload :Rack,                        File.expand_path('../omniauth_keycloak/rack', __FILE__)
 
+  autoload :CallbackController,          File.expand_path('../../app/controllers/omniauth_keycloak/callback_controller', __FILE__)
+  autoload :SessionsController,          File.expand_path('../../app/controllers/omniauth_keycloak/sessions_controller', __FILE__)
+
   class << self
 
     def init(oidc_json = nil)
@@ -34,3 +37,4 @@ end
 
 
 require File.expand_path('../strategy', __FILE__)
+require File.expand_path('../../config/routes', __FILE__)
