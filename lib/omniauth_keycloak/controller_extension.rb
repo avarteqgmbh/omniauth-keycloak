@@ -13,7 +13,7 @@ module OmniauthKeycloak::ControllerExtension
     def authenticate
       unless current_user
         OmniauthKeycloak.log('Current User is blank')
-        redirect_to "/auth/keycloak"
+        redirect_to  '/auth/keycloak'
         return false
       end
       return true

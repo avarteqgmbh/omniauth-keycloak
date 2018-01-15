@@ -1,4 +1,8 @@
 # Changelog
+### 1.2.0 -  2018-03-08
+* Fix rack middleware (#1)
+* add routes.rb again
+
 ### 1.1.3 -  2018-01-02
 * remove explicite router require
 
