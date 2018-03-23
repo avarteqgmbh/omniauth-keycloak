@@ -4,7 +4,7 @@ module OmniauthKeycloak::ControllerExtension
   extend ActiveSupport::Concern
 
   included do
-    if respodn_to?(:before_filter)
+    if respond_to?(:before_filter)
       before_filter :authenticate, :except => [:callback,:omniauth_error_callback,:revoke,:logout_user_callback]
     else
       before_action :authenticate, :except => [:callback,:omniauth_error_callback,:revoke,:logout_user_callback]

@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.2 -  2018-03-23
+* remove typo
+
 ### 1.2.1 -  2018-03-23
 * added rails 5 compatibility
 
