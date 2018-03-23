@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.1 -  2018-03-23
+* added rails 5 compatibility
+
 ### 1.2.0 -  2018-03-08
 * Fix rack middleware (#1)
 * add routes.rb again
