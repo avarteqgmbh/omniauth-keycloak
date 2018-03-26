@@ -45,20 +45,23 @@ class OmniauthKeycloak::CallbackController <  ApplicationController
         flash.now[:error] = "access denied, user has not granted permission for this app to use his data"
         render :template => 'layouts/error'
       else
-        render text: "#{env['omniauth.error']}\n #{env['omniauth.error.type']} \n #{env['omniauth.error.strategy']}"
+        render({
+          text: "#{env['omniauth.error']}\n #{env['omniauth.error.type']} \n #{env['omniauth.error.strategy']}",
+          plain: "#{env['omniauth.error']}\n #{env['omniauth.error.type']} \n #{env['omniauth.error.strategy']}"
+        })
       end
     end
 
     def revoke
       #keycloak token revoke event,revoke all tokens
       Rails.cache.clear
-      render :nothing => true, :status => 200, :content_type => 'text/html'
+      render :nothing => true, :status => 200, :content_type => 'text/html', body: nil
     end
 
     def logout_user_callback
       #keycloak logout event, logout all Users
       Rails.cache.clear
-      render :nothing => true, :status => 200, :content_type => 'text/html'
+      render :nothing => true, :status => 200, :content_type => 'text/html', body: nil
     end
 
 end

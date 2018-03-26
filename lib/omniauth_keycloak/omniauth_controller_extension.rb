@@ -6,6 +6,11 @@ module OmniauthKeycloak::OmniauthControllerExtension
 
   included do
     protected
+    unless respond_to?(:env)
+      def env
+        request.env
+      end
+    end
 
     def login(keycloak_token,refresh_token = nil)
       keycloak_token.refresh_token = refresh_token if refresh_token

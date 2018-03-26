@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.4 -  2018-03-26
+* fix render for rails 5.1.5
+
 ### 1.2.3 -  2018-03-26
 * fix api get_token aprams
 
