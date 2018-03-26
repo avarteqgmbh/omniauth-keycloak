@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.3 -  2018-03-26
+* fix api get_token aprams
+
 ### 1.2.2 -  2018-03-23
 * remove typo
 
