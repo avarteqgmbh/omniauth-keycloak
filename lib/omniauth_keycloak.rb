@@ -37,4 +37,3 @@ end
 
 
 require File.expand_path('../strategy', __FILE__)
-require File.expand_path('../../config/routes', __FILE__)

@@ -3,6 +3,7 @@ class OmniauthKeycloak::Engine < ::Rails::Engine
 
 
   initializer "omniauth_keycloak.middleware" do |app|
+    require File.expand_path('../../../config/routes', __FILE__)
 
     unless OmniauthKeycloak.config.client_only 
       app.config.middleware.use OmniAuth::Builder do
