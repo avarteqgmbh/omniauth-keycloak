@@ -31,7 +31,7 @@ class OmniauthKeycloak::Config
   end # #client_secret
 
   def url
-    @_oidc['auth-server-url']
+    ENV['keycloak_url'] || @_oidc['auth-server-url']
   end # #url
 
   def authorize_url
