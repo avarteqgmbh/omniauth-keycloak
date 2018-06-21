@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.7 -  2018-06-21
+* make omniauth via rak robust
+
 ### 1.2.6 -  2018-06-21
 * soem fixes for swagger integration via api_key
 

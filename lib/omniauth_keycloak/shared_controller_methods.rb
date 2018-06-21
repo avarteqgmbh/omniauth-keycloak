@@ -4,7 +4,7 @@ module OmniauthKeycloak::SharedControllerMethods
 
   def get_token(request)
     token = request.headers['HTTP_AUTHORIZATION']
-    token = nil if token.include?('Basic')
+    token = nil if token.present? and token.include?('Basic')
     token ||= request.params['api_key']
 
     if token
