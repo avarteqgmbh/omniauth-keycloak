@@ -1,5 +1,11 @@
 OmniauthKeycloak::Engine.routes.draw do
-  get '/auth/keycloak/callback' => 'callback#callback'
+
+  namespace :auth do
+    scope ':provider' do
+      get 'callback' => 'callback#callback'
+      get 'failure' => 'callback#omniauth_error_callback'
+    end
+  end
   get '/keycloak/callback' => 'callback#callback'
 
   get '/login'  => 'sessions#login_user'
