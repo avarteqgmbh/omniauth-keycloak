@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.6 -  2018-06-21
+* soem fixes for swagger integration via api_key
+
 ### 1.2.5 -  2018-05-15
 * load routes in rails initilaizer
 

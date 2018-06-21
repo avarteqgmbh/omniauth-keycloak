@@ -2,7 +2,7 @@ class OmniauthKeycloak::Rack < Rack::Auth::AbstractHandler
   include OmniauthKeycloak::SharedControllerMethods
 
   def call(env)
-    request = { headers: env }
+    request = { headers: env, params: Rack::Request.new(env).params}
     token = get_token(OpenStruct.new(request))
 
     if token 
