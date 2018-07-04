@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.8 -  2018-07-04
+* try to load routes, and ignore laod failrues
+
 ### 1.2.7 -  2018-06-21
 * make omniauth via rak robust
 
