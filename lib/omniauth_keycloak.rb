@@ -58,4 +58,9 @@ end
 
 
 require File.expand_path('../strategy', __FILE__)
-require File.expand_path('../../config/routes', __FILE__)
+begin
+  require File.expand_path('../../config/routes', __FILE__)
+rescue => e
+  puts e
+  puts e.backtrace * "\n"
+end
