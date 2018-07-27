@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.9 -  2018-07-27
+* add route loader as emthod
+
 ### 1.2.8 -  2018-07-04
 * try to load routes, and ignore laod failrues
 
