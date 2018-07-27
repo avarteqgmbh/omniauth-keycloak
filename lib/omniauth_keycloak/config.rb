@@ -18,6 +18,10 @@ class OmniauthKeycloak::Config
              end
   end
 
+  def load_routes
+    require File.expand_path('../../../config/routes', __FILE__)
+  end # #load_routes
+
   def public_key
     ENV['keycloak_public_key']
   end # #public_key
