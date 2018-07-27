@@ -1,4 +1,4 @@
-class OmniauthKeycloak::SessionsController < ApplicationController
+class OmniauthKeycloak::SessionsController < OmniauthKeycloak::ApplicationController
   include OmniauthKeycloak::OmniauthControllerExtension
 
   layout false
