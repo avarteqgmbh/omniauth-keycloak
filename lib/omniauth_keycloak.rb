@@ -9,6 +9,7 @@ module OmniauthKeycloak
   autoload :SharedControllerMethods,     File.expand_path('../omniauth_keycloak/shared_controller_methods', __FILE__)
   autoload :Rack,                        File.expand_path('../omniauth_keycloak/rack', __FILE__)
 
+  autoload :ApplicationController,       File.expand_path('../../app/controllers/omniauth_keycloak/application_controller', __FILE__)
   autoload :CallbackController,          File.expand_path('../../app/controllers/omniauth_keycloak/callback_controller', __FILE__)
   autoload :SessionsController,          File.expand_path('../../app/controllers/omniauth_keycloak/sessions_controller', __FILE__)
 

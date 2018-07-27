@@ -1,4 +1,4 @@
-class OmniauthKeycloak::CallbackController <  ApplicationController
+class OmniauthKeycloak::CallbackController <  OmniauthKeycloak::ApplicationController
   include OmniauthKeycloak::OmniauthControllerExtension
   layout false
 

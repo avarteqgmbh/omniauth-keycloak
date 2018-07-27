@@ -35,6 +35,13 @@ mount OmniauthKeycloak::Engine  => '/auth'
 ```
 
 
+If you got Problems with *omniauth_keycloak/application_controller not found*
+configure the eager_load_path in config/application.rb as follow:
+
+```
+  config.eager_load_paths += %W( #{OmniauthKeycloak.config.root}/app/controllers )
+```
+
 ## Secure API Calls between services
 
 You have different possibilities to authenticate one api service to another.

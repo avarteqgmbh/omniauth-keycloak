@@ -1,4 +1,7 @@
 # Changelog
+### 1.2.10 -  2018-07-27
+* correct namespaces and add documentation to eager load problems
+
 ### 1.2.9 -  2018-07-27
 * add route loader as emthod
 
