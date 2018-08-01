@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.add_dependency 'omniauth-oauth2', '~> 1.3.1'
   s.add_dependency 'jwt'
+  s.add_dependency 'httparty'
   s.add_development_dependency 'activesupport'
   s.add_development_dependency 'rails'
 

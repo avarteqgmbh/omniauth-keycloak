@@ -1,13 +1,14 @@
 module OmniauthKeycloak
 
   autoload :Configuration,               File.expand_path('../omniauth_keycloak/configuration', __FILE__)
+  autoload :Cmd,                         File.expand_path('../omniauth_keycloak/cmd', __FILE__)
   autoload :KeycloakToken,               File.expand_path('../omniauth_keycloak/keycloak_token', __FILE__)
   autoload :ControllerExtension,         File.expand_path('../omniauth_keycloak/controller_extension',__FILE__)
   autoload :OmniauthControllerExtension, File.expand_path('../omniauth_keycloak/omniauth_controller_extension',__FILE__)
   autoload :ApiControllerExtension,      File.expand_path('../omniauth_keycloak/api_controller_extension',__FILE__)
   autoload :Engine,                      File.expand_path('../omniauth_keycloak/engine', __FILE__)
   autoload :SharedControllerMethods,     File.expand_path('../omniauth_keycloak/shared_controller_methods', __FILE__)
-  autoload :ControllerHelperMethods,    File.expand_path('../omniauth_keycloak/controller_helper_methods', __FILE__)
+  autoload :ControllerHelperMethods,     File.expand_path('../omniauth_keycloak/controller_helper_methods', __FILE__)
   autoload :Rack,                        File.expand_path('../omniauth_keycloak/rack', __FILE__)
 
   autoload :ApplicationController,       File.expand_path('../../app/controllers/omniauth_keycloak/application_controller', __FILE__)
@@ -35,6 +36,10 @@ module OmniauthKeycloak
       end
     end # #log
 
+    def cmd
+      OmniauthKeycloak::Cmd
+    end # #cmd
+
 
     def register_rack(instance)
       self.log("register Rack Middleware")
@@ -61,4 +66,6 @@ end
 
 
 require File.expand_path('../strategy', __FILE__)
-  OmniauthKeycloak.config.load_routes
+OmniauthKeycloak.config.load_routes
+
+

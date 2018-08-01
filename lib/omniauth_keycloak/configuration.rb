@@ -63,4 +63,11 @@ class OmniauthKeycloak::Configuration
     ENV['keycloak_token_endpoint'] || "#{self.realm_url}/protocol/openid-connect/token"
   end # #token_endpoint
 
+
+  ##
+  # parameter:
+  # * segments      admin funcitonality which will used, e.g. users
+  def admin_api(segment)
+    URI::join(self.url, 'auth/admin/realms/', "#{self.realm}/", segment)
+  end # #admin_api
 end
