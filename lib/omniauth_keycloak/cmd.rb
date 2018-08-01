@@ -70,19 +70,17 @@ module OmniauthKeycloak::Cmd
 
     def user_id_by_email(email)
       response = HTTParty.get(
-        OmniauthKeycloak.config.admin_api("users"), { 
-          body: {
-            email: email
-          },
+        OmniauthKeycloak.config.admin_api("users?email=#{CGI::escape(email)}"), { 
           headers: {
             'Authorization' => "Bearer #{access_token}",
             'Content-Type'  => 'application/json'
           } 
         }
       ).parsed_response
-
-      if response.present? and response.length > 1
+      if response.present? and response.length > 0
         return response.first['id']
+      else
+        return nil
       end
     end # .user_id_by_email
 
