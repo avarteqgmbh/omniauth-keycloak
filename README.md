@@ -118,22 +118,22 @@ After configuring your strategy, you need to add the omniauth option to your mod
 devise :omniauthable
 ```
 
-Also mount the engine into your ```routes.rb```
+Also mount the engine into your ```routes.rb```. If the routes are not loaded automatically, then add ```OmniauthKeycloak.config.load_routes``` to load the routes from the engine. Add ```controllers: { omniauth_callbacks: 'omniauth_callback' }``` to ```devise_for```, because the standard callback method from the omniauth-keycloak engine does not work with Devise.
 
 ```ruby
 mount OmniauthKeycloak::Engine  => '/auth'
-devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
-devise_scope :user do
-  get 'sign_in', :to => 'devise/sessions#new', :as => :new_user_session
-  get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
-end
+OmniauthKeycloak.config.load_routes
+
+devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callback' }
 ```
 
-Next, create a new view for the login with Keycloak ```view/user/devise/sessions/new.html.erb``` ("user" is the name of our user model) 
+Next, create a new view for the login with Keycloak ```view/devise/sessions/new.html.erb```
 
 ```ruby
 <%- if devise_mapping.omniauthable? %>
-  <%= link_to "Sign in with Keycloak", user_omniauth_authorize_path(provider) %>
+  <%- resource_class.omniauth_providers.each do |provider| %>
+    <%= link_to "Sign in with #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider) %><br />
+  <% end -%>
 <% end -%>
 ```
 
@@ -141,7 +141,50 @@ After this, we need to create a controller for the callbacks in ```app/controlle
 
 ```ruby
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  include OmniauthKeycloak::CallbackController
+  include OmniauthKeycloak::OmniauthControllerExtension
+  skip_before_filter :authenticate
+  def callback
+    acess_token 		= env['omniauth.auth']['credentials']['token']
+    nonce           = env['omniauth.auth']['info']['original_nonce']
+    refresh_token   = env['omniauth.auth']['credentials']['refresh_token']
+
+    user = User.from_omniauth(auth_hash)
+
+    begin
+      token = OmniauthKeycloak::KeycloakToken.new(acess_token)
+      token.verify!(nonce: nonce)
+
+      if check_client_roles(token) or check_realm_roles(token)
+        login(token,refresh_token)
+        OmniauthKeycloak.log('Redirect after login')
+        if OmniauthKeycloak.config.login_redirect_url
+          sign_in_and_redirect :user, user
+        else
+          sign_in :user, user
+          redirect_to main_app.root_path
+        end
+      else
+        OmniauthKeycloak.log('Access denied')
+        flash.now[:error] = "Access denied"
+        render :template => 'layouts/error'
+      end
+
+    rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
+      OmniauthKeycloak.log(e)
+      flash[:error] = "#{e}"
+      render :template => 'layouts/error'
+    end
+  end
+
+  alias_method :keycloak, :callback
+
+  def failure
+  end
+  private
+
+  def auth_hash
+    request.env["omniauth.auth"]
+  end
 end
 ```
 
