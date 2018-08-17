@@ -10,13 +10,14 @@
 #
 module OmniauthKeycloak::Cmd
   class << self
-    def create_user(username)
+    def create_user(username, password)
       OmniauthKeycloak.log("Create user on #{OmniauthKeycloak.config.admin_api('users')}")
       response = HTTParty.post(OmniauthKeycloak.config.admin_api('users'), { 
           body: {
-            username: username, 
-            email:    username,
-            enabled:  true
+            username:     username, 
+            email:        username,
+            credentials:  [{type: 'password', value: password}],
+            enabled:      true
           }.to_json,
           headers: {
             'Authorization' => "Bearer #{access_token}",
@@ -25,7 +26,7 @@ module OmniauthKeycloak::Cmd
         }
       )
 
-      if response.present? 
+      if response.headers['location'].present? 
         return response.headers['location'].split('/').last
       end
     end # .create_user
