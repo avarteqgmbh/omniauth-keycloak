@@ -5,7 +5,15 @@
 You can install the Keycloak Client as OmniAuth Strategy to integrate it.
 This is usefull to operate with devise.
 
-Or you can use it as Standalone authentification if youw ant to use Keycloak only authentifications.
+Or you can use it as Standalone authentification if you want to use Keycloak only authentifications.
+
+
+## Authentication with Keycloak account
+
+After you integrate OAuth in your service successfully, you can authenticate  with your keycloak account.
+You don't need to set up a new database, you can still use the old database. 
+The implementation matches up the email from your keycloak account with your service account.
+
 
 ### Rails
 
@@ -204,13 +212,40 @@ class << self
 end
 ```
 
+Also add this method in ```app/models/user.rb``` to override the password requirement from Devise:
+
+```ruby
+def password_required?
+  return false if provider.present?
+  super
+end
+```
+
+
 #### Cookie size overflow
 
-If you got problems with the cookie size, change the ```:cookie_store```to ```:active_record_sotre``` in ```config/initializers/session_store.rb```
+If you got problems with the cookie size, change the ```:cookie_store``` to ```:active_record_store``` in ```config/initializers/session_store.rb```.
 
-´´´ruby
-FancyVacations::Application.config.session_store :active_record_store, :key => '_fancy_vacations_session'
-´´´
+```ruby
+FancyVacations::Application.config.session_store :active_record_store, :key => '_your_app_session'
+```
+
+Include the ´´´gem 'activerecord-session_store'´´´ into your Gemfile: 
+
+```ruby
+gem 'activerecord-session_store'
+```
+
+Run the migration generator for active_record and then run the migration:
+
+```ruby
+rails g active_record:session_migration
+```
+
+```ruby
+rake db:migrate
+```
+
 
 ### Client Integration
 
