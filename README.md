@@ -130,9 +130,8 @@ Also mount the engine into your ```routes.rb```. If the routes are not loaded au
 
 ```ruby
 mount OmniauthKeycloak::Engine  => '/auth'
-OmniauthKeycloak.config.load_routes
-
 devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callback' }
+OmniauthKeycloak.config.load_routes
 ```
 
 Next, create a new view for the login with Keycloak ```view/devise/sessions/new.html.erb```
