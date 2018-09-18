@@ -77,6 +77,11 @@ class OmniauthKeycloak::KeycloakToken
     exp.to_i < Time.now.to_i
   end
 
+
+  def id
+    self.sub
+  end # #id
+
   #returns new KeycloakToken if refresh token is available
   #@options :refresh_token refreshtoken or @refresh_token
   #
