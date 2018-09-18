@@ -1,4 +1,12 @@
 # Changelog
+### 1.3.0 -  2018-09-18
+* add routes.rb again
+* update README.md
+* corrected some mistakes in README.md
+* update README.md
+* update README.md
+* Feature/user management (#2)
+
 ### 1.2.10 -  2018-07-27
 * correct namespaces and add documentation to eager load problems
 
