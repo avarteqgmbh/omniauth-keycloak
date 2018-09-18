@@ -1,4 +1,4 @@
-class OmniauthKeycloak::Config
+class OmniauthKeycloak::Configuration
   attr_accessor :allowed_realm_roles, :allowed_client_roles, :token_cache_expires_in, :login_redirect_url, :logout_redirect_url, :allowed_realm_roles_api, :allowed_client_roles_api, :client_only
   attr_writer   :scope
 
@@ -63,4 +63,11 @@ class OmniauthKeycloak::Config
     ENV['keycloak_token_endpoint'] || "#{self.realm_url}/protocol/openid-connect/token"
   end # #token_endpoint
 
+
+  ##
+  # parameter:
+  # * segments      admin funcitonality which will used, e.g. users
+  def admin_api(segment)
+    URI::join(self.url, 'auth/admin/realms/', "#{self.realm}/", segment).to_s
+  end # #admin_api
 end
