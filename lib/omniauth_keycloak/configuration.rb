@@ -63,6 +63,9 @@ class OmniauthKeycloak::Configuration
     ENV['keycloak_token_endpoint'] || "#{self.realm_url}/protocol/openid-connect/token"
   end # #token_endpoint
 
+  def disable_rack=(value)
+    self.client_only = value
+  end # #disable_rack=
 
   ##
   # parameter:

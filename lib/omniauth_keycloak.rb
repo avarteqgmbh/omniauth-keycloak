@@ -29,7 +29,7 @@ module OmniauthKeycloak
     end # .config
 
     def log(msg)
-      if false# defined? Rails
+      if defined? Rails
         Rails.logger.debug("[OmniauthKeycloak] #{msg}")
       else
         puts "[OmniauthKeycloak] #{msg}"
