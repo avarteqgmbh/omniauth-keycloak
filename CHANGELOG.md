@@ -1,4 +1,7 @@
 # Changelog
+### 1.3.1 -  2018-09-24
+* make configurationb etter understandable
+
 ### 1.3.0 -  2018-09-18
 * add routes.rb again
 * update README.md
