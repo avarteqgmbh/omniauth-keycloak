@@ -1,4 +1,7 @@
 # Changelog
+### 1.3.2 -  2018-12-07
+* fix logout path for keycloak
+
 ### 1.3.1 -  2018-09-24
 * make configurationb etter understandable
 
