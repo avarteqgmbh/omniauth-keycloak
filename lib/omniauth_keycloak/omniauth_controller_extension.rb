@@ -28,11 +28,11 @@ module OmniauthKeycloak::OmniauthControllerExtension
     def logout_keycloak
       clear_session
 
-      url = OmniauthKeycloak.config.url +  "/protocol/openid-connect/logout"
+      url = OmniauthKeycloak.config.realm_url +  "/protocol/openid-connect/logout"
       if OmniauthKeycloak.config.logout_redirect_url
-        url += "?post_logout_redirect_uri=#{OmniauthKeycloak.config.logout_redirect_url}"
+        url += "?redirect_uri=#{OmniauthKeycloak.config.logout_redirect_url}"
       else
-        url += "?post_logout_redirect_uri=#{request.base_url}"
+        url += "?redirect_uri=#{request.base_url}"
       end
       redirect_to url
     end
