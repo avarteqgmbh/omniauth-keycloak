@@ -1,4 +1,7 @@
 # Changelog
+### 1.3.3 -  2019-01-25
+* change behaviour of handling aud and azp tokens
+
 ### 1.3.2 -  2018-12-07
 * fix logout path for keycloak
 
