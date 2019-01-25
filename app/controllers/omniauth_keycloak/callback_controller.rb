@@ -26,8 +26,10 @@ class OmniauthKeycloak::CallbackController <  OmniauthKeycloak::ApplicationContr
         render :template => 'layouts/error'
       end
 
-    rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
+    rescue OmniauthKeycloak::KeyclakToken::InvalidToken => e
+      OmniauthKeycloak.log(e.class)
       OmniauthKeycloak.log(e)
+      OmniauthKeycloak.log(e.backtrace*"\n")
       flash[:error] = "#{e}"
       render :template => 'layouts/error'
     end
