@@ -28,6 +28,9 @@ module OmniauthKeycloak::Cmd
 
       if response.headers['location'].present? 
         return response.headers['location'].split('/').last
+      else
+        OmniauthKeycloak.log("Could not create #{response.to_json}")
+        return nil
       end
     end # .create_user
 
