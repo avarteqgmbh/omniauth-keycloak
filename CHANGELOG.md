@@ -1,4 +1,8 @@
 # Changelog
+### 1.3.4 -  2019-05-02
+* add more debug options
+* added redirect back after login, so the url is not the root url in any case
+
 ### 1.3.3 -  2019-01-25
 * change behaviour of handling aud and azp tokens
 
