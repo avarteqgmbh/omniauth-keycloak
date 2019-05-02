@@ -17,6 +17,8 @@ class OmniauthKeycloak::CallbackController <  OmniauthKeycloak::ApplicationContr
         OmniauthKeycloak.log('Redirect after login')
         if OmniauthKeycloak.config.login_redirect_url
           redirect_to OmniauthKeycloak.config.login_redirect_url
+        elsif stored_redirect_url.present?
+          redirect_to stored_redirect_url
         else
           redirect_to main_app.root_path
         end
