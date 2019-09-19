@@ -28,7 +28,7 @@ module OmniauthKeycloak::ApiControllerExtension
       if token
         unless check_client_roles_api(token) or check_realm_roles_api(token)
           OmniauthKeycloak.log("Allowed Roles #{OmniauthKeycloak.config.allowed_realm_roles_api | OmniauthKeycloak.config.allowed_client_roles_api}")
-          OmniauthKeycloak.log("Token Roles:\n\t#{token.roles * "\n\t"}")
+          OmniauthKeycloak.log("Token Roles:\n\t#{Array(token.roles) * "\n\t"}")
           OmniauthKeycloak.log('Access denied')
           render json: 'Access denied', status: 403
         end

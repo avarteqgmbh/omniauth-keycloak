@@ -1,4 +1,7 @@
 # Changelog
+### 1.3.5 -  2019-09-19
+* fix role loading from token
+
 ### 1.3.4 -  2019-05-02
 * add more debug options
 * added redirect back after login, so the url is not the root url in any case
