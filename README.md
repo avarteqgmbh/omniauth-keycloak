@@ -69,12 +69,14 @@ You are also able to assign Roles to the Service accounts to ristrict the Servic
 token = OmniauthKeycloak::KeycloakToken.client_credentials
 ```
 
-### Getting started with devise
+# Getting started with devise
 
-Add the OmniAuth gem to the Gemile of your application:
+Add the ```omniauth-keycloak``` gem to the Gemile of your application. It's important that the gem is above the ```devise``` gem line in the Gemfile. Otherwise it would throw a ```configure_warden!``` error.
 
 ```ruby
-gem 'omniauth-keycloak'
+gem 'omniauth-keycloak',  git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
+gem 'devise'    # add devise after omniauth-keycloak 
+
 ```
 
 Then run ```bundle install```
@@ -87,43 +89,10 @@ rails g migration AddOmniauthToUsers provider:string uid:string
 ```
 and run ```rake db:migrate``` after that.
 
-Next up, you need to declare the Keycloak provider and also add the initializer for the OIDC-JSON in ```config/initializers/devise.rb```:
+After the migration, you need to add the omniauth option for devise to your model in  ```app/models/user.rb```:
 
 ```ruby
-OmniauthKeycloak.init( ENV["<OIDC-JSON>"] ) do |config|
-  config.allowed_realm_roles  = [ <ROLES> ]
-  config.allowed_client_roles = [ <ROLES> ]
-  config.token_cache_expires_in = 10.minutes
-  config.allowed_client_roles_api =[ <ROLES> ]
-  config.allowed_realm_roles_api  =[ <ROLES> ]
-end
-
-config.omniauth(:keycloak, OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, {
-    scope:      OmniauthKeycloak.config.scope,
-    public_key: OmniauthKeycloak.config.public_key, 
-    client_options: {
-      site:          OmniauthKeycloak.config.url,
-      authorize_url: OmniauthKeycloak.config.authorize_url,
-      token_url:     OmniauthKeycloak.config.token_endpoint
-    }
-  })
-```
-
-Add for <OIDC-JSON> the environment variable name for the OIDC-JSON from Keycloak and define the allowed roles in <ROLES>.
-All necessary informations are loaded from the environment variable by the ```omniauth-keycloak``` engine.
-
-Example for environment file as ```env.yml```:
-
-```yaml
-keycloak_oidc_json: OIDC-JSON from Keycloak
-
-keycloak_public_key: public key from Keycloak
-```
-
-After configuring your strategy, you need to add the omniauth option to your model in  ```app/models/user.rb```:
-
-```ruby
-devise :omniauthable
+devise ..., :omniauthable
 ```
 
 Also mount the engine into your ```routes.rb```. If the routes are not loaded automatically, then add ```OmniauthKeycloak.config.load_routes``` to load the routes from the engine. Add ```controllers: { omniauth_callbacks: 'omniauth_callback' }``` to ```devise_for```, because the standard callback method from the omniauth-keycloak engine does not work with Devise.
@@ -131,10 +100,9 @@ Also mount the engine into your ```routes.rb```. If the routes are not loaded au
 ```ruby
 mount OmniauthKeycloak::Engine  => '/auth'
 devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callback' }
-OmniauthKeycloak.config.load_routes
 ```
 
-Next, create a new view for the login with Keycloak ```view/devise/sessions/new.html.erb```
+Next create a new view for the login with Keycloak ```view/devise/sessions/new.html.erb```
 
 ```ruby
 <%- if devise_mapping.omniauthable? %>
@@ -144,10 +112,10 @@ Next, create a new view for the login with Keycloak ```view/devise/sessions/new.
 <% end -%>
 ```
 
-After this, we need to create a controller for the callbacks in ```app/controllers/omniauth_callbacks_controller.rb```
+After this, we need to overwrite the controller from the engine for the callbacks in ```app/controllers/omniauth_callback_controller.rb```. The reason is that the standard controller from omniauth-keycloak dont have a user association.
 
 ```ruby
-class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+class OmniauthCallbacksController < Devise::OmniauthCallbackController
   include OmniauthKeycloak::OmniauthControllerExtension
   skip_before_filter :authenticate
   def callback
@@ -185,8 +153,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   alias_method :keycloak, :callback
 
-  def failure
-  end
+  def failure;  end
+
   private
 
   def auth_hash
@@ -195,18 +163,16 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 end
 ```
 
-Finally, we need to implementent the from_omniauth method in the user model to find or create the user ```app/models/user.rb```
+Finally, we need to implementent the from_omniauth method in the user model to find the user ```app/models/user.rb```. The user has to be present beacuse Keycloak should not create new user for the client.
 
 ```ruby
-class << self
-  def from_omniauth(auth)
-    user = where(email: auth.info.email).first || where(auth.slice(:provider, :uid).to_h).first || new
-    user.tap do |this|
-      this.update_attributes(
-        provider: auth.provider,
-        uid: auth.uid, 
-        email: auth.info.email)
-    end
+def from_omniauth(auth)
+  user = where(email: auth.info.email).first || where(auth.slice(:provider, :uid).to_h).first 
+  user.tap do |this|
+    this.update_attributes(
+      provider: auth.provider,
+      uid: auth.uid, 
+      email: auth.info.email)
   end
 end
 ```
@@ -216,12 +182,81 @@ Also add this method in ```app/models/user.rb``` to override the password requir
 ```ruby
 def password_required?
   return false if provider.present?
-  super
 end
 ```
 
+## Configuration with gem "envyable"
 
-#### Cookie size overflow
+Next up, you need to declare the Keycloak provider and also add the initializer for the OIDC-JSON in ```config/initializers/devise.rb```:
+
+```ruby
+OmniauthKeycloak.init( $AddYourJsonHere$ ) do |config|
+  config.allowed_realm_roles  = [ $AddYourRolesHere$ ]
+  config.token_cache_expires_in = 10.minutes
+  config.disable_rack = true
+end
+
+config.omniauth(:keycloak, OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, {
+    scope:      OmniauthKeycloak.config.scope,
+    public_key: OmniauthKeycloak.config.public_key, 
+    client_options: {
+      site:          OmniauthKeycloak.config.url,
+      authorize_url: OmniauthKeycloak.config.authorize_url,
+      token_url:     OmniauthKeycloak.config.token_endpoint
+    }
+  })
+```
+
+Add for $AddYourJsonHere$ and $AddYourRolesHere$ the environment variable name for the OIDC-JSON from Keycloak and your defined roles.
+All necessary informations are loaded from the environment variable by the ```omniauth-keycloak``` engine.
+
+### env.yml Example
+
+Example for environment file as ```env.yml```:
+
+```yaml
+keycloak_oidc_json: OIDC-JSON from Keycloak
+
+keycloak_public_key: public key from Keycloak
+
+allowed_roles: "your defined role"
+```
+
+If you allow more than one role, you can add your roles as Json to your ```env.yml```:
+
+```yaml
+allowed_roles: '{
+  "realm_roles": [ $AddYourRolesHere$ ]
+}'
+```
+
+Change the config loading line in the ```config/initializers/devise.rb``` to:
+```ruby
+config.allowed_realm_roles  = JSON.parse(ENV['allowed_roles'])['realm_roles']
+```
+
+## CSRF Protection
+
+The request phase of the OmniAuth Ruby gem is vulnerable to Cross-Site Request Forgery when used as part of the Ruby on Rails framework. See [CVE-2015-9284](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-9284)
+
+Therefore we need to add an csrf protection gem to prevent this vulnerability: 
+https://github.com/cookpad/omniauth-rails_csrf_protection
+
+```ruby
+gem "omniauth-rails_csrf_protection"
+```
+
+Then run ```bundle install```. Then update all links to ```/auth/:provider``` to use a POST request. 
+
+```ruby
+<%= link_to "Sign in with #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider), method: :post %><br />
+```
+
+See the [Dokumentation](https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284) form the gem for more details.
+
+## Troubleshooting
+
+### Cookie size overflow
 
 If you got problems with the cookie size, change the ```:cookie_store``` to ```:active_record_store``` in ```config/initializers/session_store.rb```.
 
@@ -241,32 +276,15 @@ Run the migration generator for active_record and then run the migration:
 rails g active_record:session_migration
 ```
 
-```ruby
-rake db:migrate
-```
+Run ```rake db:migrate``` after the migration.
 
 
-### Client Integration
+### Development with Ruby-2.6.0 and Rails-6.0.0
 
-The usage is very simple.
-Install the omniauth-keycloak gem and use the Token-Client to generate a Bearer Token.
+#### Spring
 
-You must send this Token into the Authorization Header in Every HTTP Request
+If you get undefined method error for the OmniauthCallbackController. Then try to restart Spring with ```spring stop```. Then start your server again.
 
-```Ruby
-class Fancyness < ActiveResource::Base
+#### before_action
 
-  self.site     = 'https://test.avarteq.de'
-
-  def self.create_fancy_stuff
-    self.headers['Authorization'] = "Bearer #{OmniauthKeycloak::KeycloakToken.client_credentials.token}"
-    response = self.create(:identifier => :disable_anynines_organization, :init_payload => organization.to_h)
-  ....
-
-```
-
-### Server Integration
-
-Just include the ```OmniauthKeycloak::ApiControllerExtension``` into the API Base Controller.
-
-Don't forget to set the allowed roles for API Access into the initializer.
+For services with older ruby and rails version we need to keep the class method before_filter. For newer version you need to replace these methods with before_action syntax. See [StackOverflow](https://stackoverflow.com/questions/16519828/rails-4-before-filter-vs-before-action) entry.
