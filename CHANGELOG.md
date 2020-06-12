@@ -1,4 +1,7 @@
 # Changelog
+### 1.3.6 -  2020-06-12
+* support multiple scopes with newer omniauth verisons
+
 ### 1.3.5 -  2019-09-19
 * fix role loading from token
 
