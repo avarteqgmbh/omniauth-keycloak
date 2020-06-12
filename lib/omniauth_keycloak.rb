@@ -46,7 +46,7 @@ module OmniauthKeycloak
       instance.use OmniAuth::Builder do
 
         provider(:keycloak, OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, {
-          scope:      OmniauthKeycloak.config.scope,
+          scopes:      OmniauthKeycloak.config.scope,
           public_key: OmniauthKeycloak.config.public_key, 
           client_options: {
             site:          OmniauthKeycloak.config.url,
