@@ -1,4 +1,6 @@
 *.gem
+users.csv
+keycloak.json
 *.rbc
 /.config
 /coverage/
