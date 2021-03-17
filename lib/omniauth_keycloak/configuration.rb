@@ -56,7 +56,7 @@ class OmniauthKeycloak::Configuration
   end # #scope
 
   def realm_url
-    "#{self.url}/realms/#{self.realm}"
+    URI::join(self.url, '/auth/realms/', "#{self.realm}").to_s
   end # #realm_url
 
   def token_endpoint
@@ -71,6 +71,6 @@ class OmniauthKeycloak::Configuration
   # parameter:
   # * segments      admin funcitonality which will used, e.g. users
   def admin_api(segment)
-    URI::join(self.url, 'auth/admin/realms/', "#{self.realm}/", segment).to_s
+    URI::join(self.url, '/auth/admin/realms/', "#{self.realm}/", segment).to_s
   end # #admin_api
 end
