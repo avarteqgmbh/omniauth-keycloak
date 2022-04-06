@@ -44,7 +44,7 @@ This is mandatory, any failure in the URI definition will result in denied login
 
 If your service also want to identify itself to other services, set **Service Accounts Enabled** to **On**.
 This Service Account can now get assigned to Scopes to authenticate against other clients.
-See [Request Token to make Calls](Request Token to make Calls) how to use a **Service Account** with this gem.
+See [Request Token to make Calls](#request-token-to-make-calls) how to use a **Service Account** with this gem.
 
 ![](docs/service_account.png)
 
