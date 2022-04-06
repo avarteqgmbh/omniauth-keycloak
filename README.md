@@ -73,10 +73,21 @@ The implementation matches up the email from your keycloak account with your ser
 
 ### Rails
 
+Add the OmniAuth gem to the Gemile of your application:
+
+```ruby
+gem 'omniauth-keycloak', git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
+```
+
 Add following initializer.
 Take the OIDC-JSON from Keycloak.
 Also define the Public key from keycloak under the env variable.
-```keycloak_public_key```
+You can do so by unsing the gem [envyable](https://github.com/philnash/envyable) locally.
+
+An .env.yml can look like:
+```yaml
+keycloak_public_key: '<your public key>'
+```
 
 ```ruby
 OmniauthKeycloak.init( <OIDC-JSON> ) do |config|
@@ -88,11 +99,20 @@ OmniauthKeycloak.init( <OIDC-JSON> ) do |config|
 end
 ```
 
+**Attention** If you get an 404 from Keycloak during login attempts, the auth URL have maybe changed.
+You can set it manually with the env variable **keycloak_authorize_url**
+
+```yaml
+keycloak_public_key: '<your public key>'
+keycloak_authorize_url: 'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/auth'
+*``
+
+
+
 Mount the engine into your routes.rb
 You will maybe cover old views with session_path helpers.
 
 ```
-get    'logout', to:'omniauth_keycloak/sessions#logout_user', as: 'session'
 delete 'logout', to:'omniauth_keycloak/sessions#logout_user', as: 'session'
 mount OmniauthKeycloak::Engine  => '/auth'
 ```
@@ -112,6 +132,12 @@ After that, every call against the service has to be authenticated against Keycl
 
 Don't forget to set the allowed roles for API Access into the initializer.
 
+```ruby
+class ApplicationController < ActionController::Base
+  include OmniauthKeycloak::ApiControllerExtension
+  …
+
+```
 
 #### Extended Helper Methods
 
@@ -122,6 +148,14 @@ This extension introduces the method ```current_user``` to the Service as helper
 JWT Token of the logged in user / client.
 
 
+```ruby
+class ApplicationController < ActionController::Base
+  include OmniauthKeycloak::ControllerExtension
+  …
+
+```
+
+
 ### Integrate to Devise
 
 The Integration to an Devise setup is a littlebit different from the Omniauth only workflow, se we will explain here from the beginning how to set it up.
@@ -129,7 +163,7 @@ The Integration to an Devise setup is a littlebit different from the Omniauth on
 Add the OmniAuth gem to the Gemile of your application:
 
 ```ruby
-gem 'omniauth-keycloak'
+gem 'omniauth-keycloak', git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
 ```
 
 Then run ```bundle install```
@@ -339,3 +373,9 @@ class Fancyness < ActiveResource::Base
   ....
 
 ```
+
+
+## Known issues
+
+ * JWKS Support not Implemented
+ * No autoamtic lookup after OAuth2 End Points
