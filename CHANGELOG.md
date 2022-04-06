@@ -1,4 +1,14 @@
 # Changelog
+### 1.3.8 -  2022-04-06
+* extend the documentation
+* adjust documentation
+* fix anchor
+* added image
+* added documentation for custom urls
+* fix typo
+* document token endpoint
+* fix typo
+
 ### 1.3.7 -  2021-03-17
 * adjust realm_url method
 
