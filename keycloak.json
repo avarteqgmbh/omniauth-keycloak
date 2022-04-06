@@ -1,0 +1,10 @@
+{
+  "realm": "Anynines",
+  "auth-server-url": "https://auth.de.a9sapp.eu/auth",
+  "ssl-required": "external",
+  "resource": "a9s-keycloak-users-report",
+  "credentials": {
+    "secret": "40cf4a9d-bc76-449c-9be6-65b865a5c0ff"
+  },
+  "confidential-port": 0
+}

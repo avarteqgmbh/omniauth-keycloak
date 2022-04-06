@@ -1,0 +1,520 @@
+Email,Group,Roles,Direct assigned Roles,Clients
+api@anyines.com,"","uma_authorization
+offline_access","account.view-profile
+account.manage-account",""
+asharma@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+aweber@anynines.com,Customer Projects,"uma_authorization
+OrderManagement-Employee
+CNAD-CI/CD-Manager
+offline_access","account.view-profile
+account.manage-account",""
+bguttmann@anynines.com,"Data Protection Coordinators
+Enterprise Platform Operations","uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+offline_access","account.view-profile
+account.manage-account",""
+bphilippi@anynines.com,F - Business Unit leader,"uma_authorization
+OrderManagement-Admin
+OrderManagement-Employee
+Invoicing-Manager
+Invoicing-Informer
+AccountManagement-Access
+License-Reader
+Invoicing-Reader
+offline_access","account.view-profile
+account.manage-account",""
+cheusser@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+cruss@anynines.com,Chief Operating Officer,"uma_authorization
+OrderManagement-Admin
+OrderManagement-Employee
+Platform-Manager
+Invoicing-Manager
+Invoicing-Informer
+License-Reader
+Invoicing-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+dhoff@anynines.com,Enterprise Platform Operations,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+offline_access","account.view-profile
+account.manage-account",""
+dhorbach@anynines.com,Customer Projects,"uma_authorization
+OrderManagement-Employee
+CNAD-CI/CD-Manager
+offline_access","account.view-profile
+account.manage-account",""
+dleidisch@anynines.com,"CNAD - Business Unit leader
+Customer Projects
+Internal Projects","uma_authorization
+OrderManagement-Admin
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Admin
+Usage-Manager
+offline_access","realm-management.realm-admin
+realm-management.manage-authorization
+realm-management.create-client
+realm-management.manage-events
+realm-management.manage-realm
+realm-management.manage-identity-providers
+realm-management.manage-users
+realm-management.impersonation
+realm-management.query-clients
+realm-management.manage-clients
+realm-management.query-groups
+realm-management.query-users
+account.view-profile
+account.manage-account",""
+dreumann@anynines.com,Internal Projects,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+dvu@anynines.com,Internal Projects,"uma_authorization
+OrderManagement-Admin
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+MetricsMonitoring-Editor
+Registration-Manager
+AccountManagement-Access
+License-Reader
+Usage-Manager
+offline_access","realm-management.manage-authorization
+realm-management.manage-events
+realm-management.manage-realm
+realm-management.manage-users
+realm-management.view-users
+realm-management.view-clients
+realm-management.query-groups
+realm-management.manage-clients
+realm-management.view-authorization
+account.view-profile
+account.manage-account",""
+fgermano@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+julian.fischer@anynines.com,Chief Executive Officer,"uma_authorization
+Registration-Reader
+OrderManagement-Admin
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+Invoicing-Manager
+Registration-Manager
+Invoicing-Informer
+License-Reader
+Invoicing-Reader
+Admin
+offline_access","account.view-profile
+account.manage-account",""
+fkittel@anynines.com,Enterprise Platform Operations,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+offline_access","account.view-profile
+account.manage-account",""
+gkunze@anynines.com,OM - Business Unit leader,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+hbubel@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+hdemelo@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+igasper@anynines.com,"Account Management & Sales
+AMS - Business Unit leader
+Finances","uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+Invoicing-Manager
+MetricsMonitoring-Editor
+OrderManagement-Manager
+Registration-Manager
+Invoicing-Informer
+AccountManagement-Access
+License-Reader
+Invoicing-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+jchopin@anynines.com,Internal Projects,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+jschuster@anynines.com,"HR - Business Unit leader
+Information Security Management","uma_authorization
+OrderManagement-Employee
+OrderManagement-Manager
+offline_access","account.view-profile
+account.manage-account",""
+kblah@anynines.com,"Data Protection Coordinators
+MS - Business Unit leader","uma_authorization
+OrderManagement-Employee
+offline_access
+RH-Invoicing-Manager","account.view-profile
+account.manage-account",""
+kkaja@anynines.com,"anynines GmbH
+Internal Projects","uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+lhaendler@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+mabdelrahiem@anynines.com,Enterprise Platform Operations,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+offline_access","account.view-profile
+account.manage-account",""
+mboth@anynines.com,Enterprise Platform Operations,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+offline_access","account.view-profile
+account.manage-account",""
+mdoherty@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+mdondorf@anynines.com,Customer Projects,"uma_authorization
+OrderManagement-Employee
+CNAD-CI/CD-Manager
+offline_access","account.view-profile
+account.manage-account",""
+mfolz@anynines.com,"Admin
+Customer Projects
+Internal Projects","uma_authorization
+OrderManagement-Admin
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+Invoicing-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+Invoicing-Informer
+AccountManagement-Access
+License-Reader
+Invoicing-Reader
+Admin
+Usage-Manager
+MetricsMonitoring-Admin
+offline_access","realm-management.realm-admin
+account.view-profile
+account.manage-account",""
+mlieser@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+mmoser@anynines.com,"CloudNative App Development
+Customer Projects
+Internal Projects","uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+mmueller@anynines.com,Managed Services,"uma_authorization
+OrderManagement-Employee
+offline_access
+RH-Invoicing-Manager","account.view-profile
+account.manage-account",""
+mney@anynines.com,"Customer Projects
+Internal Projects","uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+molivi@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+morbanz@anynines.com,"Customer Projects
+Internal Projects","uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+msiddiqui@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+msiemann@anynines.com,Finances,"uma_authorization
+OrderManagement-Employee
+Invoicing-Manager
+OrderManagement-Manager
+Invoicing-Informer
+Invoicing-Reader
+offline_access","account.view-profile
+account.manage-account",""
+mvalencia-flores@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+myacoub@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+nkiefer@anynines.com,Customer Projects,"uma_authorization
+OrderManagement-Employee
+CNAD-CI/CD-Manager
+offline_access","account.view-profile
+account.manage-account",""
+nmaurer@anynines.com,EPO - Business Unit leader,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+OrderManagement-Manager
+offline_access","account.view-profile
+account.manage-account",""
+oheydt@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+pbarth@anynines.com,Managed Services,"uma_authorization
+OrderManagement-Employee
+offline_access
+RH-Invoicing-Manager","account.view-profile
+account.manage-account",""
+pdihe@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+peichler@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+phartz@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+phennen@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+pkuntz@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+pross@anynines.com,M - Business Unit leader,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+psormani@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+rgogolok@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+ribelshaeuser@anynines.com,Data Services,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+rsouza@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+sahmed@anynines.com,Internal Projects,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+CNAD-CI/CD-Manager
+Registration-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+skretzschmann@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+sfischer@anynines.com,"AMS - Business Unit leader
+Information Security Management","uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+Invoicing-Manager
+MetricsMonitoring-Editor
+OrderManagement-Manager
+Registration-Manager
+Invoicing-Informer
+AccountManagement-Access
+License-Reader
+Invoicing-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+smenz@anynines.com,Customer Projects,"uma_authorization
+OrderManagement-Employee
+CNAD-CI/CD-Manager
+offline_access","account.view-profile
+account.manage-account",""
+sreiser@anynines.com,"CloudNative App Development
+Customer Projects","uma_authorization
+OrderManagement-Employee
+CNAD-CI/CD-Manager
+offline_access","account.view-profile
+account.manage-account",""
+sschmidt@anynines.com,Enterprise Platform Operations,"uma_authorization
+OrderManagement-Employee
+Workflow-Manager
+offline_access","account.view-profile
+account.manage-account",""
+szuber@anynines.com,DS - Business Unit leader,"uma_authorization
+Registration-Reader
+OrderManagement-Employee
+Platform-Manager
+OrderManagement-Manager
+License-Reader
+Usage-Manager
+offline_access","account.view-profile
+account.manage-account",""
+tmeier@anynines.com,"Account Management & Sales
+Admin
+Data Services
+Internal Projects","uma_authorization
+Registration-Reader
+OrderManagement-Admin
+OrderManagement-Employee
+Workflow-Manager
+Platform-Manager
+Invoicing-Manager
+CNAD-CI/CD-Manager
+MetricsMonitoring-Editor
+OrderManagement-Manager
+Registration-Manager
+Invoicing-Informer
+AccountManagement-Access
+License-Reader
+Invoicing-Reader
+Admin
+Usage-Manager
+MetricsMonitoring-Admin
+offline_access","realm-management.manage-authorization
+realm-management.create-client
+realm-management.manage-realm
+realm-management.view-realm
+realm-management.manage-users
+realm-management.view-users
+realm-management.view-clients
+realm-management.query-clients
+realm-management.query-groups
+realm-management.manage-clients
+realm-management.view-events
+realm-management.view-authorization
+account.view-profile
+account.manage-account",""
+yaljazairi@anynines.com,anynines GmbH,"uma_authorization
+OrderManagement-Employee
+offline_access","account.view-profile
+account.manage-account",""
+ybykov@anynines.com,Managed Services,"uma_authorization
+OrderManagement-Employee
+offline_access
+RH-Invoicing-Manager","account.view-profile
+account.manage-account",""
