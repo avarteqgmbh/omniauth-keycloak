@@ -8,19 +8,86 @@ This is usefull to operate with devise.
 Or you can use it as Standalone authentification if you want to use Keycloak only authentifications.
 
 
-## Authentication with Keycloak account
+## Requirements
+
+In order to use the Keycloak Integration, you need an so called **OIDC-JSON** and the Keycloak **public key**.
+To obtain them, there are several Steps required which are explained in the following.
+
+### Keycloak Public Key
+
+At the current state of this gem, auto fetching of Public keys via JWKS are not full implemented.
+Therefore we need to preshare the key to all clients.
+
+The Keycloak Public key can get obtain in the general Realm settings under  **Keys**
+
+![](docs/public_key.png)
+
+
+### Create a Client
+The OIDC-JSON includes the pre shared secrets for your app and it represents a **client** within Keycloak.
+
+To obtain a OIDC-JSON, first create a client within the Keycloak admin console.
+Each service to integrate to keycloak will require an own client.
+
+![](docs/new_client.png)
+
+Choose a Client-ID for your application.
+
+#### Client Settings
+
+![](docs/settings.png)
+
+Open the Client Settings, and set **Access Type** to **confidential**.
+
+Enter under **Valid Redirect URIs** the URI to your service. Wildcards in the path are allowed.
+This is mandatory, any failure in the URI definition will result in denied logins.
+
+If your service also want to identify itself to other services, set **Service Accounts Enabled** to **On**.
+This Service Account can now get assigned to Scopes to authenticate against other clients.
+See [Request Token to make Calls](#request-token-to-make-calls) how to use a **Service Account** with this gem.
+
+![](docs/service_account.png)
+
+#### Client Scopes
+
+![](docs/scopes.png)
+
+Under **Scopes** you can define, which scope-permissions will be included within the JWT token, the service
+willr etreive from Keycloak.
+If **Full Scope Allowed** is set to **On**, the JWT token will include all scopes a User has within the Realm.
+
+
+#### Client Installation
+![](docs/oidc.png)
+
+In **Installation** you can then access the final **OIDC-JSON** for your service.
+
+
+
+## Secure your Application/Service with Keycloak
 
 After you integrate OAuth in your service successfully, you can authenticate  with your keycloak account.
-You don't need to set up a new database, you can still use the old database. 
+You don't need to set up a new database, you can still use the old database.
 The implementation matches up the email from your keycloak account with your service account.
 
 
 ### Rails
 
+Add the OmniAuth gem to the Gemile of your application:
+
+```ruby
+gem 'omniauth-keycloak', git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
+```
+
 Add following initializer.
-Take the OIDC-JSOn from Keycloak.
+Take the OIDC-JSON from Keycloak.
 Also define the Public key from keycloak under the env variable.
-```keycloak_public_key```
+You can do so by unsing the gem [envyable](https://github.com/philnash/envyable) locally.
+
+An .env.yml can look like:
+```yaml
+keycloak_public_key: '<your public key>'
+```
 
 ```ruby
 OmniauthKeycloak.init( <OIDC-JSON> ) do |config|
@@ -32,55 +99,78 @@ OmniauthKeycloak.init( <OIDC-JSON> ) do |config|
 end
 ```
 
+**Attention** If you get an 404 from Keycloak during login attempts, the auth URL have maybe changed.
+You can set it manually with the env variable **keycloak_authorize_url**
+
+```yaml
+keycloak_public_key:     '<your public key>'
+keycloak_authorize_url:  'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/auth'
+keycloak_token_endpoint: 'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/token'
+```
+
+
+
 Mount the engine into your routes.rb
 You will maybe cover old views with session_path helpers.
 
 ```
-get    'logout', to:'omniauth_keycloak/sessions#logout_user', as: 'session'
 delete 'logout', to:'omniauth_keycloak/sessions#logout_user', as: 'session'
 mount OmniauthKeycloak::Engine  => '/auth'
 ```
 
 
-If you got Problems with *omniauth_keycloak/application_controller not found*
+If you got Problems with **omniauth_keycloak/application_controller not found**
 configure the eager_load_path in config/application.rb as follow:
 
 ```
   config.eager_load_paths += %W( #{OmniauthKeycloak.config.root}/app/controllers )
 ```
 
-## Secure API Calls between services
+#### Secure API Services
 
-You have different possibilities to authenticate one api service to another.
+Just include the ```OmniauthKeycloak::ApiControllerExtension``` into the API Base Controller or ApplicationController.
+After that, every call against the service has to be authenticated against Keycloak.
 
-### Request Token to make Calls
-
-Create a own full user for this calls and authenticate with user and password:
-```ruby
-token = OmniauthKeycloak::KeycloakToken.password(<user>,<password>)
-```
-Or
-
-Use the Client Credentials to get a token.
-Therefore you must activate the *Service Account*-Feature in the client settings.
-You are also able to assign Roles to the Service accounts to ristrict the Service2Service access the same way.
+Don't forget to set the allowed roles for API Access into the initializer.
 
 ```ruby
-token = OmniauthKeycloak::KeycloakToken.client_credentials
+class ApplicationController < ActionController::Base
+  include OmniauthKeycloak::ApiControllerExtension
+  …
+
 ```
 
-### Getting started with devise
+#### Extended Helper Methods
+
+If you neet an integration for end users of the service, please prefer ```OmniauthKeycloak::ControllerExtension```
+over ```OmniauthKeycloak::ApiControllerExtension```.
+
+This extension introduces the method ```current_user``` to the Service as helper method to access the
+JWT Token of the logged in user / client.
+
+
+```ruby
+class ApplicationController < ActionController::Base
+  include OmniauthKeycloak::ControllerExtension
+  …
+
+```
+
+
+### Integrate to Devise
+
+The Integration to an Devise setup is a littlebit different from the Omniauth only workflow, se we will explain here from the beginning how to set it up.
 
 Add the OmniAuth gem to the Gemile of your application:
 
 ```ruby
-gem 'omniauth-keycloak'
+gem 'omniauth-keycloak', git: 'git@github.com:avarteqgmbh/omniauth-keycloak.git'
 ```
 
 Then run ```bundle install```
 
-Next, you need to add the 2 columns "provider" (string) and "uid" (string) to your ```User``` model (use the class name for the application's users). 
-You can generate the migration with 
+Next, you need to add the 2 columns "provider" (string) and "uid" (string) to your ```User``` model (use the class name for the application's users).
+You can generate the migration with
 
 ```ruby
 rails g migration AddOmniauthToUsers provider:string uid:string
@@ -100,7 +190,7 @@ end
 
 config.omniauth(:keycloak, OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, {
     scope:      OmniauthKeycloak.config.scope,
-    public_key: OmniauthKeycloak.config.public_key, 
+    public_key: OmniauthKeycloak.config.public_key,
     client_options: {
       site:          OmniauthKeycloak.config.url,
       authorize_url: OmniauthKeycloak.config.authorize_url,
@@ -204,7 +294,7 @@ class << self
     user.tap do |this|
       this.update_attributes(
         provider: auth.provider,
-        uid: auth.uid, 
+        uid: auth.uid,
         email: auth.info.email)
     end
   end
@@ -229,7 +319,7 @@ If you got problems with the cookie size, change the ```:cookie_store``` to ```:
 FancyVacations::Application.config.session_store :active_record_store, :key => '_your_app_session'
 ```
 
-Include the ´´´gem 'activerecord-session_store'´´´ into your Gemfile: 
+Include the ´´´gem 'activerecord-session_store'´´´ into your Gemfile:
 
 ```ruby
 gem 'activerecord-session_store'
@@ -245,8 +335,28 @@ rails g active_record:session_migration
 rake db:migrate
 ```
 
+## Login against Keycloak secured Services
 
-### Client Integration
+If you want to Login against an already secured Service, you can use this gem to obtain a valid token
+from given credentials or client secrets.
+
+### Request Token to make Calls
+
+Create a own full user for this calls and authenticate with user and password:
+```ruby
+token = OmniauthKeycloak::KeycloakToken.password(<user>,<password>)
+```
+Or
+
+Use the Client Credentials to get a token.
+Therefore you must activate the **Service Account**-Feature in the client settings.
+You are also able to assign Roles to the Service accounts to ristrict the Service2Service access the same way.
+
+```ruby
+token = OmniauthKeycloak::KeycloakToken.client_credentials
+```
+
+### Integration within ActiveResource
 
 The usage is very simple.
 Install the omniauth-keycloak gem and use the Token-Client to generate a Bearer Token.
@@ -265,8 +375,8 @@ class Fancyness < ActiveResource::Base
 
 ```
 
-### Server Integration
 
-Just include the ```OmniauthKeycloak::ApiControllerExtension``` into the API Base Controller.
+## Known issues
 
-Don't forget to set the allowed roles for API Access into the initializer.
+ * JWKS Support not Implemented
+ * No autoamtic lookup after OAuth2 End Points
