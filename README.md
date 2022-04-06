@@ -10,12 +10,21 @@ Or you can use it as Standalone authentification if you want to use Keycloak onl
 
 ## Requirements
 
-In order to use the Keycloak Integration, you need an so called *OIDC-JSON* and the Keycloak *public key*.
+In order to use the Keycloak Integration, you need an so called **OIDC-JSON** and the Keycloak **public key**.
 To obtain them, there are several Steps required which are explained in the following.
 
+### Keycloak Public Key
 
-### OIDC-JSON
-The OIDC-JSON includes the pre shared secrets for your app and it represents a *client* within Keycloak.
+At the current state of this gem, auto fetching of Public keys via JWKS are not full implemented.
+Therefore we need to preshare the key to all clients.
+
+The Keycloak Public key can get obtain in the general Realm settings under  **Keys**
+
+![](docs/public_key.png)
+
+
+### Create a Client
+The OIDC-JSON includes the pre shared secrets for your app and it represents a **client** within Keycloak.
 
 To obtain a OIDC-JSON, first create a client within the Keycloak admin console.
 Each service to integrate to keycloak will require an own client.
@@ -28,13 +37,14 @@ Choose a Client-ID for your application.
 
 ![](docs/settings.png)
 
-Open the Client Settings, and set *Access Type* to *confidentiial*.
+Open the Client Settings, and set **Access Type** to **confidential**.
 
-Enter under *Valid Redirect URIs* the URI to your service. Wildcards in the path are allowed.
+Enter under **Valid Redirect URIs** the URI to your service. Wildcards in the path are allowed.
 This is mandatory, any failure in the URI definition will result in denied logins.
 
-If your service also want to identify itself to other services, set *Service Accounts Enabled* to *On*.
+If your service also want to identify itself to other services, set **Service Accounts Enabled** to **On**.
 This Service Account can now get assigned to Scopes to authenticate against other clients.
+See [Request Token to make Calls](Request Token to make Calls) how to use a **Service Account** with this gem.
 
 ![](docs/service_account.png)
 
@@ -42,19 +52,17 @@ This Service Account can now get assigned to Scopes to authenticate against othe
 
 ![](docs/scopes.png)
 
-Under *Scopes* you can define, which scope-permissions will be included within the JWT token, the service
+Under **Scopes** you can define, which scope-permissions will be included within the JWT token, the service
 willr etreive from Keycloak.
-If *Full Scope Allowed* is set to *On*, the JWT token will include all scopes a User has within the Realm.
+If **Full Scope Allowed** is set to **On**, the JWT token will include all scopes a User has within the Realm.
 
 
 #### Client Installation
 ![](docs/oidc.png)
 
-In *Installation* you can then access the final *OIDC-JSON* for your service.
+In **Installation** you can then access the final **OIDC-JSON** for your service.
 
 
-
-### Public Key
 
 ## Secure your Application/Service with Keycloak
 
@@ -90,7 +98,7 @@ mount OmniauthKeycloak::Engine  => '/auth'
 ```
 
 
-If you got Problems with *omniauth_keycloak/application_controller not found*
+If you got Problems with **omniauth_keycloak/application_controller not found**
 configure the eager_load_path in config/application.rb as follow:
 
 ```
@@ -112,12 +120,6 @@ over ```OmniauthKeycloak::ApiControllerExtension```.
 
 This extension introduces the method ```current_user``` to the Service as helper method to access the
 JWT Token of the logged in user / client.
-
-
-
-## Secure API Calls between services
-
-You have different possibilities to authenticate one api service to another.
 
 
 ### Integrate to Devise
@@ -312,7 +314,7 @@ token = OmniauthKeycloak::KeycloakToken.password(<user>,<password>)
 Or
 
 Use the Client Credentials to get a token.
-Therefore you must activate the *Service Account*-Feature in the client settings.
+Therefore you must activate the **Service Account**-Feature in the client settings.
 You are also able to assign Roles to the Service accounts to ristrict the Service2Service access the same way.
 
 ```ruby
