@@ -103,8 +103,9 @@ end
 You can set it manually with the env variable **keycloak_authorize_url**
 
 ```yaml
-keycloak_public_key: '<your public key>'
-keycloak_authorize_url: 'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/auth'
+keycloak_public_key:     '<your public key>'
+keycloak_authorize_url:  'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/auth'
+keycloak_token_endpoint: 'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/token'
 ```
 
 
