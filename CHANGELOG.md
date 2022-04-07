@@ -1,4 +1,8 @@
 # Changelog
+### 1.3.10 -  2022-04-07
+* remove jsons
+* extend gitignore
+
 ### 1.3.9 -  2022-04-07
 * remove csv
 * ignore csv
