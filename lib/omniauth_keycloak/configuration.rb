@@ -44,8 +44,16 @@ class OmniauthKeycloak::Configuration
     ENV['keycloak_url'] || @_oidc['auth-server-url']
   end # #url
 
+  def discovery_url
+    ENV['keycloak_discovery_url'] || "#{self.realm_url}/.well-known/openid-configuration"
+  end # #discovery_url
+
+  def discovery_object
+    HTTParty.get(discovery_url) || {}
+  end
+
   def authorize_url
-    ENV['keycloak_authorize_url'] || "#{self.realm_url}/protocol/openid-connect/auth"
+    ENV['keycloak_authorize_url'] || discovery_object()["authorization_endpoint"] || "#{self.realm_url}/protocol/openid-connect/auth"
   end # #authorize_url
 
   def realm
@@ -65,7 +73,7 @@ class OmniauthKeycloak::Configuration
   end # #realm_url
 
   def token_endpoint
-    ENV['keycloak_token_endpoint'] || "#{self.realm_url}/protocol/openid-connect/token"
+    ENV['keycloak_token_endpoint'] || discovery_object()["token_endpoint"] || "#{self.realm_url}/protocol/openid-connect/token"
   end # #token_endpoint
 
   def disable_rack=(value)
