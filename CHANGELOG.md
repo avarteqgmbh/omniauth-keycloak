@@ -1,4 +1,8 @@
 # Changelog
+### 1.4.0 -  2022-04-21
+* Feature/user management (#2)
+* INT-2030 add discovery_url (#7)
+
 ### 1.3.10 -  2022-04-07
 * remove jsons
 * extend gitignore
