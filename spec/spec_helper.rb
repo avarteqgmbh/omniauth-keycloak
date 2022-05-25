@@ -1,5 +1,11 @@
 
 ENV['RAILS_ENV'] ||= 'test'
+
+ENV['keycloak_public_key'] ||= 'xxx'
+ENV['keycloak_url'] ||= 'http://localhost-test.de/'
+ENV['keycloak_authorize_url'] ||= 'http://localhost-test.de/auth/'
+ENV['keycloak_token_endpoint'] ||= 'http://localhost-test.de/auth/realms/xxx/.well-known/openid-configuration'
+
 require 'active_support'
 ActiveSupport::Deprecation.silenced = true
 require File.expand_path("../dummy/config/environment.rb",  __FILE__) unless defined?(Rails)

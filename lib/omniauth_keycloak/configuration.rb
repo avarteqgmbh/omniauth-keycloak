@@ -49,7 +49,9 @@ class OmniauthKeycloak::Configuration
   end # #discovery_url
 
   def discovery_object
-    HTTParty.get(discovery_url) || {}
+    unless ENV['RAILS_ENV'] = 'test'
+      HTTParty.get(discovery_url) || {}
+    end
   end
 
   def authorize_url
