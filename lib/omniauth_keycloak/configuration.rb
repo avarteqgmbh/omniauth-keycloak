@@ -49,7 +49,7 @@ class OmniauthKeycloak::Configuration
   end # #discovery_url
 
   def discovery_object
-    unless ENV['RAILS_ENV'] = 'test'
+    unless Rails.env.test?
       HTTParty.get(discovery_url) || {}
     end
   end
