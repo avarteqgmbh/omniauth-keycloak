@@ -66,6 +66,4 @@ end
 
 
 require File.expand_path('../strategy', __FILE__)
-OmniauthKeycloak.config.load_routes
-
 

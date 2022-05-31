@@ -1,3 +1,5 @@
+require 'httparty'
+
 class OmniauthKeycloak::Configuration
   attr_accessor :allowed_realm_roles, :allowed_client_roles, :token_cache_expires_in, :login_redirect_url, :logout_redirect_url, :allowed_realm_roles_api, :allowed_client_roles_api, :client_only
   attr_writer   :scope
@@ -49,7 +51,7 @@ class OmniauthKeycloak::Configuration
   end # #discovery_url
 
   def discovery_object
-    HTTParty.get(discovery_url) || {}
+    ::HTTParty.get(discovery_url) || {}
   end
 
   def authorize_url
@@ -69,7 +71,7 @@ class OmniauthKeycloak::Configuration
   end
 
   def realm_url
-    URI::join(self.url, self.server_prefix, '/realms/', "#{self.realm}").to_s
+    URI::join(self.url, "#{self.server_prefix}/realms/", "#{self.realm}").to_s
   end # #realm_url
 
   def token_endpoint
@@ -84,7 +86,7 @@ class OmniauthKeycloak::Configuration
   # parameter:
   # * segments      admin funcitonality which will used, e.g. users
   def admin_api(segment)
-    URI::join(self.url, self.server_prefix, '/admin/realms/', "#{self.realm}/", segment).to_s
+    URI::join(self.url, "#{self.server_prefix}/admin/realms/", "#{self.realm}/", segment).to_s
   end # #admin_api
 
   def detect_server_prefix
