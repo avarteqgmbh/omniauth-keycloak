@@ -256,7 +256,6 @@ DEPENDENCIES
   activesupport
   guard-bundler
   guard-rspec
-  httparty
   listen (= 2.10.1)
   omniauth-keycloak!
   rails
