@@ -100,12 +100,19 @@ end
 ```
 
 **Attention** If you get an 404 from Keycloak during login attempts, the auth URL have maybe changed.
-You can set it manually with the env variable **keycloak_authorize_url**
+You can set it manually with the env variable **keycloak_authorize_url**.
 
 ```yaml
 keycloak_public_key:     '<your public key>'
 keycloak_authorize_url:  'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/auth'
 keycloak_token_endpoint: 'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/token'
+```
+
+**Attention** If you get a `Invalid issuer` from Keycloak during login attempts, the server prefix may have changed.
+You can set it manually with the env variable **keycloak_server_prefix**. When you ommit this config, it's set to `auth`
+
+```yaml
+keycloak_server_prefix:     '<your prefix>'
 ```
 
 

@@ -67,7 +67,7 @@ class OmniauthKeycloak::Configuration
   end # #scope
 
   def server_prefix
-    @_server_prefix ||= '/auth'
+    @_server_prefix ||= ENV['keycloak_server_prefix'] || '/auth'
   end
 
   def realm_url
