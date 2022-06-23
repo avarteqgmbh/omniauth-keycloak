@@ -1,4 +1,11 @@
 # Changelog
+### 1.4.1 -  2022-06-23
+* WiP fix bundle setup & rspec
+* fix rspec tests
+* adjust test environment check and token endpoint url
+* apply change request after code review
+* remove test environment check
+
 ### 1.4.0 -  2022-04-21
 * Feature/user management (#2)
 * INT-2030 add discovery_url (#7)
