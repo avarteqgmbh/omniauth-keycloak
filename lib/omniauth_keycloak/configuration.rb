@@ -65,11 +65,11 @@ class OmniauthKeycloak::Configuration
   end # #scope
 
   def server_prefix
-    @_server_prefix ||= '/auth'
+    @_server_prefix ||= '/auth/'
   end
 
   def realm_url
-    URI::join(self.url, self.server_prefix, '/realms/', "#{self.realm}").to_s
+    URI::join(self.url, self.server_prefix, 'realms/', "#{self.realm}").to_s
   end # #realm_url
 
   def token_endpoint
@@ -84,7 +84,7 @@ class OmniauthKeycloak::Configuration
   # parameter:
   # * segments      admin funcitonality which will used, e.g. users
   def admin_api(segment)
-    URI::join(self.url, self.server_prefix, '/admin/realms/', "#{self.realm}/", segment).to_s
+    URI::join(self.url, self.server_prefix, 'admin/realms/', "#{self.realm}/", segment).to_s
   end # #admin_api
 
   def detect_server_prefix
