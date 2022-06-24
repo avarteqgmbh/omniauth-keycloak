@@ -16,17 +16,19 @@ class OmniauthKeycloak::KeycloakToken
   end
   KEYS = %i[jti exp iat iss aud sub nbf typ azp nonce session_state client_session allowed_origins resource_access realm_access auth_time acr].freeze
 
-  attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url
+  attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url, :config
   # claims see http://openid.net/specs/openid-connect-core-1_0.html#IDToken and additional specifications
   attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access, :auth_time, :acr
   attr_accessor :attributes, :refresh_token
 
-  def initialize(token)
+  def initialize(token, config = OmniauthKeycloak.config)
+    @config = config
+
     @token = token
-    @public_key    = OmniauthKeycloak.config.public_key
-    @client_id     = OmniauthKeycloak.config.client_id
-    @client_secret = OmniauthKeycloak.config.client_secret
-    @keycloak_url  = OmniauthKeycloak.config.realm_url
+    @public_key    = config.public_key
+    @client_id     = config.client_id
+    @client_secret = config.client_secret
+    @keycloak_url  = config.realm_url
     @decoded_token = decode_token[0] # array[0] = attributes, array[1] = algorithm
     KEYS.each do |key|
       self.send "#{key}=", @decoded_token[key.to_s]
@@ -88,10 +90,10 @@ class OmniauthKeycloak::KeycloakToken
                     else
                       @refresh_token
                     end
-    options[:token_url] = OmniauthKeycloak.config.token_endpoint
+    options[:token_url] = config.token_endpoint
     new_token = oauth2token({ refresh_token: refresh_token, expires_at: @exp }, options).refresh!
 
-    keycloak_token = OmniauthKeycloak::KeycloakToken.new(new_token.token)
+    keycloak_token = OmniauthKeycloak::KeycloakToken.new(new_token.token, config)
     keycloak_token.refresh_token = new_token.refresh_token if new_token.refresh_token
     keycloak_token
   end
@@ -120,16 +122,16 @@ class OmniauthKeycloak::KeycloakToken
 
   # Get KeycloakToken with passwort grant type
   def self.password(user, password)
-    client = OAuth2::Client.new(OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, token_url: OmniauthKeycloak.config.token_endpoint)
+    client = OAuth2::Client.new(config.client_id, config.client_secret, token_url: config.token_endpoint)
     token  = client.password.get_token(user, password)
-    OmniauthKeycloak::KeycloakToken.new(token.token)
+    OmniauthKeycloak::KeycloakToken.new(token.token, config)
   end # .password
 
   # Get KeycloakToken with client credentials grant type
   def self.client_credentials
-    client = OAuth2::Client.new(OmniauthKeycloak.config.client_id, OmniauthKeycloak.config.client_secret, token_url: OmniauthKeycloak.config.token_endpoint)
+    client = OAuth2::Client.new(config.client_id, config.client_secret, token_url: config.token_endpoint)
     token  = client.client_credentials.get_token
-    OmniauthKeycloak::KeycloakToken.new(token.token)
+    OmniauthKeycloak::KeycloakToken.new(token.token, config)
     # no refesh token for client credentials grant type
   end
 

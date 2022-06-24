@@ -317,6 +317,46 @@ def password_required?
 end
 ```
 
+#### Multiple providers ####
+You can configure multiple providers with different prefixes. Add the providers like this to your ```env.yaml```
+
+```yaml
+foo_keycloak_oidc_json: OIDC-JSON from Foo Keycloak
+foo_keycloak_public_key: public key from Foo Keycloak
+
+bar_keycloak_oidc_json: OIDC-JSON from Bar Keycloak
+bar_keycloak_public_key: public key from Bar Keycloak
+```
+You need to update your controller callbacks to use the specific confing, instead of the general one. An easy way is to pass the config prefix via the controller method to the callback like so:
+```ruby
+  class Users::OmniauthcallbackController < Devise::OmniauthCallbacksController
+    def callback(config_prefix = "")
+      ...
+      begin
+        keycloak_config = ::OmniauthKeycloak::Configuration.new(ENV["#{config_prefix}keycloak_oidc_json"] , config_prefix)
+        # additional config setup, like allowed roles
+        token = OmniauthKeycloak::KeycloakToken.new(acess_token, keycloak_config)
+        token.verify!(nonce: nonce)
+      
+      if check_client_roles(token, keycloak_config.allowed_client_roles) or check_realm_roles(token, keycloak_config.allowed_realm_roles)
+        login(token, refresh_token, keycloak_config.token_cache_expires_in.minutes)
+    end
+
+    def foo
+      callback("foo_")
+    end
+
+    def bar
+      callback("bar_")
+    end
+  end
+```
+---
+**NOTE**
+
+Make sure to name your custom providers without "keycloak" in their name, otherwise they will not work. So "foo_keycloak" or "keycloak_bar" will not work.
+
+---
 
 #### Cookie size overflow
 

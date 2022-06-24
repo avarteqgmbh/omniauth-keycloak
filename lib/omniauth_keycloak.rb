@@ -14,14 +14,19 @@ module OmniauthKeycloak
   autoload :ApplicationController,       File.expand_path('../../app/controllers/omniauth_keycloak/application_controller', __FILE__)
   autoload :CallbackController,          File.expand_path('../../app/controllers/omniauth_keycloak/callback_controller', __FILE__)
   autoload :SessionsController,          File.expand_path('../../app/controllers/omniauth_keycloak/sessions_controller', __FILE__)
-
+  class Default
+    attr_accessor :config      
+  end
+  
   class << self
 
-    def init(oidc_json = nil)
-      @config = ::OmniauthKeycloak::Configuration.new(oidc_json)
+    def init(oidc_json = nil, config_prefix = "")
+      @config = ::OmniauthKeycloak::Configuration.new(oidc_json , config_prefix)
       if block_given?
           yield(@config)
       end
+
+      self
     end # #init
 
     def config
