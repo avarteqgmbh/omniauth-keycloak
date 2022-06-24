@@ -14,9 +14,6 @@ module OmniauthKeycloak
   autoload :ApplicationController,       File.expand_path('../../app/controllers/omniauth_keycloak/application_controller', __FILE__)
   autoload :CallbackController,          File.expand_path('../../app/controllers/omniauth_keycloak/callback_controller', __FILE__)
   autoload :SessionsController,          File.expand_path('../../app/controllers/omniauth_keycloak/sessions_controller', __FILE__)
-  class Default
-    attr_accessor :config      
-  end
   
   class << self
 
