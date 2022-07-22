@@ -152,7 +152,7 @@ class ApplicationController < ActionController::Base
 If you neet an integration for end users of the service, please prefer ```OmniauthKeycloak::ControllerExtension```
 over ```OmniauthKeycloak::ApiControllerExtension```.
 
-This extension introduces the method ```current_user``` to the Service as helper method to access the
+This extension introduces the method ```current_omniauth_user``` to the Service as helper method to access the
 JWT Token of the logged in user / client.
 
 
