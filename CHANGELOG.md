@@ -1,4 +1,8 @@
 # Changelog
+### 1.5.0 -  2022-08-04
+* INT-2030 add discovery_url (#7)
+* BUM-7600 Remove: autoloading routes (#9)
+
 ### 1.4.1 -  2022-06-23
 * WiP fix bundle setup & rspec
 * fix rspec tests

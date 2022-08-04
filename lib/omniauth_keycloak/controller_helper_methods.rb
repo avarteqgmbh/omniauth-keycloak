@@ -5,12 +5,12 @@ module OmniauthKeycloak::ControllerHelperMethods
 
   included do
 
-    helper_method :current_user
+    helper_method :current_omniauth_user
 
     protected
 
     def authenticate
-      unless current_user
+      unless current_omniauth_user
         OmniauthKeycloak.log('Current User is blank')
         session[:redirect_after_login] = request.url
         redirect_to  '/auth/keycloak'
@@ -19,9 +19,9 @@ module OmniauthKeycloak::ControllerHelperMethods
       return true
     end
 
-    def current_user
+    def current_omniauth_user
       cached_token
-    end # #current_user
+    end # #current_omniauth_user
 
 
     def stored_redirect_url
