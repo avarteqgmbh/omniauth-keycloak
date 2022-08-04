@@ -100,12 +100,19 @@ end
 ```
 
 **Attention** If you get an 404 from Keycloak during login attempts, the auth URL have maybe changed.
-You can set it manually with the env variable **keycloak_authorize_url**
+You can set it manually with the env variable **keycloak_authorize_url**.
 
 ```yaml
 keycloak_public_key:     '<your public key>'
 keycloak_authorize_url:  'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/auth'
 keycloak_token_endpoint: 'https://your-keycloak.url/realms/<your realm>/protocol/openid-connect/token'
+```
+
+**Attention** If you get a `Invalid issuer` from Keycloak during login attempts, the server prefix may have changed.
+You can set it manually with the env variable **keycloak_server_prefix**. When you ommit this config, it's set to `auth`
+
+```yaml
+keycloak_server_prefix:     '<your prefix>'
 ```
 
 
@@ -145,7 +152,7 @@ class ApplicationController < ActionController::Base
 If you neet an integration for end users of the service, please prefer ```OmniauthKeycloak::ControllerExtension```
 over ```OmniauthKeycloak::ApiControllerExtension```.
 
-This extension introduces the method ```current_user``` to the Service as helper method to access the
+This extension introduces the method ```current_omniauth_user``` to the Service as helper method to access the
 JWT Token of the logged in user / client.
 
 
@@ -310,6 +317,46 @@ def password_required?
 end
 ```
 
+#### Multiple providers ####
+You can configure multiple providers with different prefixes. Add the providers like this to your ```env.yaml```
+
+```yaml
+foo_keycloak_oidc_json: OIDC-JSON from Foo Keycloak
+foo_keycloak_public_key: public key from Foo Keycloak
+
+bar_keycloak_oidc_json: OIDC-JSON from Bar Keycloak
+bar_keycloak_public_key: public key from Bar Keycloak
+```
+You need to update your controller callbacks to use the specific confing, instead of the general one. An easy way is to pass the config prefix via the controller method to the callback like so:
+```ruby
+  class Users::OmniauthcallbackController < Devise::OmniauthCallbacksController
+    def callback(config_prefix = "")
+      ...
+      begin
+        keycloak_config = ::OmniauthKeycloak::Configuration.new(ENV["#{config_prefix}keycloak_oidc_json"] , config_prefix)
+        # additional config setup, like allowed roles
+        token = OmniauthKeycloak::KeycloakToken.new(acess_token, keycloak_config)
+        token.verify!(nonce: nonce)
+      
+      if check_client_roles(token, keycloak_config.allowed_client_roles) or check_realm_roles(token, keycloak_config.allowed_realm_roles)
+        login(token, refresh_token, keycloak_config.token_cache_expires_in.minutes)
+    end
+
+    def foo
+      callback("foo_")
+    end
+
+    def bar
+      callback("bar_")
+    end
+  end
+```
+---
+**NOTE**
+
+Make sure to name your custom providers without "keycloak" in their name, otherwise they will not work. So "foo_keycloak" or "keycloak_bar" will not work.
+
+---
 
 #### Cookie size overflow
 
