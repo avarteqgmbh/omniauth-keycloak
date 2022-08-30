@@ -1,113 +1,101 @@
 require 'omniauth-oauth2'
 require 'jwt'
+require 'uri'
 
-module OmniAuth
-  module Strategies
-    class Keycloak < OmniAuth::Strategies::OAuth2
-      class InvalidToken < Exception; end
-      attr_accessor :decoded_token
+class OmniAuth::Strategies::Keycloak < OmniAuth::Strategies::OAuth2
+  class InvalidToken < Exception; end
 
+  option :client_options, {
+    site: 'http://localhost:8080/auth/realms/master',
+    authorize_url: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
+    token_url: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/token'
+  }
 
-      option :client_options, {
-        site:          'http://localhost:8080/auth/realms/master',
-        authorize_url: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
-        token_url:     'http://localhost:8080/auth/realms/master/protocol/openid-connect/token'
-      }
+  option :public_key
+  option :pkce, true
 
-      option :public_key
-
-      def request_phase
-        session[:nonce] = SecureRandom.hex(24)
-        options.authorize_params[:nonce] = session[:nonce]
-        super
-      end
-
-
-      def callback_phase
-        #look at omniauth-oauth2 callback_phase
-        error = request.params["error_reason"] || request.params["error"]
-        if error
-          fail!(error, CallbackError.new(request.params["error"], request.params["error_description"] || request.params["error_reason"], request.params["error_uri"]))
-        elsif !options.provider_ignores_state && (request.params["state"].to_s.empty? || request.params["state"] != session.delete("omniauth.state"))
-          fail!(:csrf_detected, CallbackError.new(:csrf_detected, "CSRF detected"))
-        else
-          self.access_token = build_access_token
-          self.access_token = access_token.refresh! if access_token.expired?
-          begin
-            @decoded_token = decode_token[0]
-            #call super from grandparent instead parent
-            OmniAuth::Strategy.instance_method(:callback_phase).bind(self).call
-          rescue JWT::VerificationError => e
-            fail!(:VerificationError, CallbackError.new(:VerificationError, e.message))
-          end
-
-        end
-      rescue ::OAuth2::Error, CallbackError => e
-        fail!(:invalid_credentials, e)
-      rescue ::Timeout::Error, ::Errno::ETIMEDOUT => e
-        fail!(:timeout, e)
-      rescue ::SocketError => e
-        fail!(:failed_to_connect, e)
-      end
-
-
-
-      uid do
-        @decoded_token['sub']
-      end
-
-      credentials do
-        {
-          "id_token"             => access_token.params['id_token'],
-          "decoded_access_token" => @decoded_token 
-        }
-      end
-
-      info do
-          hash = {
-            "name"                => @decoded_token['name'],
-            "preffered_username"  => @decoded_token['preferred_username'],
-            "given_name"          => @decoded_token['given_name'],
-            "family_name"         => @decoded_token['family_name'],
-            "email"               => @decoded_token['email'],
-            "exp"                 => @decoded_token['exp'],
-            "iat"                 => @decoded_token['iat'],
-            "sub"                 => @decoded_token['sub'],
-            "session_state"       => @decoded_token['session_state'],
-            "client_session"      => @decoded_token['client_session'],
-            "nonce"               => @decoded_token['nonce'],
-            "original_nonce"      => session[:nonce]
-          }
-          if @decoded_token['realm_access']
-            hash['realm_access'] = @decoded_token['realm_access']['roles']
-          end
-          if @decoded_token['allowed-origins']
-            hash["allowed-origins"] = @decoded_token['allowed-origins']
-          end
-          if @decoded_token['resource_access']
-            hash["resource_access"] = @decoded_token['resource_access']
-          end
-
-          hash
-      end
-
-      def get_token
-        access_token.token
-      end
-
-      def decode_token
-        key =  OpenSSL::PKey::RSA.new(Base64.decode64(options[:public_key]))
-        JWT.decode(get_token,key, true, { :algorithm => 'RS256' })
-      end
-
-      def verify!(expected = {})
-        @decoded_token['exp'].to_i > Time.now.to_i &&
-        @decoded_token['iss'] == expected[:issuer] &&
-        Array(@decoded_token['aud']).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
-        @decoded_token['nonce'] == expected[:nonce] or
-        raise InvalidToken.new('Invalid ID Token')
-      end
-
-    end
+  uid do
+    raw_info['sub']
   end
+
+  extra do
+    {
+      'raw_info' => raw_info,
+      'id_token' => access_token.params['id_token']
+    }
+  end
+
+  info do
+    hash = {
+      'name' => raw_info['name'],
+      'preffered_username' => raw_info['preferred_username'],
+      'given_name' => raw_info['given_name'],
+      'family_name' => raw_info['family_name'],
+      'email' => raw_info['email'],
+      'exp' => raw_info['exp'],
+      'iat' => raw_info['iat'],
+      'sub' => raw_info['sub'],
+      'session_state' => raw_info['session_state'],
+      'client_session' => raw_info['client_session'],
+      'nonce' => raw_info['nonce'],
+      'original_nonce' => session[:nonce]
+    }
+    hash['realm_access']    = raw_info['realm_access']['roles'] if raw_info['realm_access']
+    hash['allowed-origins'] = raw_info['allowed-origins'] if raw_info['allowed-origins']
+    hash['resource_access'] = raw_info['resource_access'] if raw_info['resource_access']
+
+    hash
+  end
+
+  def request_phase
+    session[:nonce] = SecureRandom.hex(24)
+    options.authorize_params[:nonce] = session[:nonce]
+    super
+  end
+
+  # NOTE: the callback url get called twice, in request_phase and callback_phase
+  # but: the state and code are only known in callback phase
+  # as a consequence, keycloak will deny the requests with "invalid redirect_uri"
+  # we remove the code and state here.
+  # the state will generated after the first call of callback_url, so we can't access it here
+  def callback_url
+    url = URI(super)
+    if url.query
+      query = Hash[URI.decode_www_form(url.query)]
+      query.delete('code')
+      query.delete('state')
+
+      url.query = (URI.encode_www_form(query) if query.keys.count > 0)
+    end
+    url.to_s
+  end
+
+  def raw_info
+    decoded_jwt.first
+  end
+
+  def public_key_for_jwt
+    OpenSSL::PKey::RSA.new(Base64.decode64(options[:public_key]))
+  end
+
+  def decoded_jwt
+    JWT.decode(
+      access_token.token,
+      public_key_for_jwt,
+      true,
+      {
+        algorithm: 'RS256'
+      }
+    )
+  end
+
+  def verify!(expected = {})
+    raise InvalidToken, 'Invalid ID Token' unless
+      raw_info['exp'].to_i > Time.now.to_i &&
+      raw_info['iss'] == expected[:issuer] &&
+      Array(raw_info['aud']).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
+      raw_info['nonce'] == expected[:nonce]
+  end
+
+  OmniAuth.config.add_camelization('keycloak', 'Keycloak')
 end
