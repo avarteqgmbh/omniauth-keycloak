@@ -1,4 +1,8 @@
 # Changelog
+### 2.0.0 -  2022-09-01
+* BUM-7600 Remove: autoloading routes (#9)
+* update to omniauth 2 and omniauth-oauth 1.8 (#10)
+
 ### 1.5.0 -  2022-08-04
 * INT-2030 add discovery_url (#7)
 * BUM-7600 Remove: autoloading routes (#9)
