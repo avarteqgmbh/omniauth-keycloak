@@ -16,7 +16,9 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
 
   s.require_paths = ['lib']
-  s.add_dependency 'omniauth-oauth2', '~> 1.3.1'
+
+  s.add_dependency "omniauth", ">= 2.0"
+  s.add_dependency 'omniauth-oauth2', '>= 1.8.0'
   s.add_dependency 'jwt'
   s.add_dependency 'httparty'
   s.add_development_dependency 'activesupport'
