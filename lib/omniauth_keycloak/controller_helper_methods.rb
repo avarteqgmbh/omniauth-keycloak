@@ -13,7 +13,13 @@ module OmniauthKeycloak::ControllerHelperMethods
       unless current_omniauth_user
         OmniauthKeycloak.log('Current User is blank')
         session[:redirect_after_login] = request.url
-        redirect_to  '/auth/keycloak'
+        render(
+          {
+            template:   'layouts/post_redirect',
+            layout:     'layouts/blank_oauth',
+            locals: { auth_url: '/auth/keycloak'}
+          }
+        )
         return false
       end
       return true
@@ -70,7 +76,5 @@ module OmniauthKeycloak::ControllerHelperMethods
       Rails.cache.delete(session[:omniauth_keycloak_sub]) if session[:omniauth_keycloak_sub]
       session.clear
     end
-
   end
-
 end
