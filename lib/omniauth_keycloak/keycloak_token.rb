@@ -12,13 +12,16 @@
 class OmniauthKeycloak::KeycloakToken
   class InvalidToken < RuntimeError
   end
+
   class InvalidSetup < RuntimeError
   end
-  KEYS = %i[jti exp iat iss aud sub nbf typ azp nonce session_state client_session allowed_origins resource_access realm_access auth_time acr].freeze
+  KEYS = %i[jti exp iat iss aud sub nbf typ azp nonce session_state client_session allowed_origins resource_access
+            realm_access auth_time acr].freeze
 
   attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url, :config
   # claims see http://openid.net/specs/openid-connect-core-1_0.html#IDToken and additional specifications
-  attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session, :allowed_origins, :resource_access, :realm_access, :auth_time, :acr
+  attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session,
+                :allowed_origins, :resource_access, :realm_access, :auth_time, :acr
   attr_accessor :attributes, :refresh_token
 
   def initialize(token, config = OmniauthKeycloak.config)
@@ -31,9 +34,9 @@ class OmniauthKeycloak::KeycloakToken
     @keycloak_url  = config.realm_url
     @decoded_token = decode_token[0] # array[0] = attributes, array[1] = algorithm
     KEYS.each do |key|
-      self.send "#{key}=", @decoded_token[key.to_s]
+      send "#{key}=", @decoded_token[key.to_s]
     end
-    @allowed_origins = @decoded_token["allowed-origins"]
+    @allowed_origins = @decoded_token['allowed-origins']
     # instance_variable_set("@#{key}", @decoded_token[key.to_s])
     set_attributes
   end
@@ -48,7 +51,7 @@ class OmniauthKeycloak::KeycloakToken
     hash = {}
     if resource_access
       resource_access.each do |client|
-        hash[client[0]] = client[1]["roles"]
+        hash[client[0]] = client[1]['roles']
       end
     end
     hash
@@ -67,7 +70,7 @@ class OmniauthKeycloak::KeycloakToken
 
   def realm_roles
     if realm_access
-      realm_access["roles"]
+      realm_access['roles']
     else
       []
     end
@@ -78,7 +81,7 @@ class OmniauthKeycloak::KeycloakToken
   end
 
   def id
-    self.sub
+    sub
   end # #id
 
   # returns new KeycloakToken if refresh token is available
@@ -114,7 +117,11 @@ class OmniauthKeycloak::KeycloakToken
 
     raise InvalidToken, "Token expired. is: #{exp}, expected: <= #{Time.now.to_i}" if exp.to_i <= Time.now.to_i
     raise InvalidToken, "Invalid issuer. is: #{iss}, expected: #{expected[:issuer]}" if iss != expected[:issuer]
-    raise InvalidToken, "Invalid audience. is: #{aud}, expected: #{expected[:client_id]}" unless (Array(aud) + Array(azp)).compact.include?(expected[:client_id])
+
+    unless (Array(aud) + Array(azp)).compact.include?(expected[:client_id])
+      raise InvalidToken,
+            "Invalid audience. is: #{aud}, expected: #{expected[:client_id]}"
+    end
     raise InvalidToken, "Invalid nonce. is: #{nonce}, expected: #{expected[:nonce]}" if nonce != expected[:nonce]
 
     true
@@ -122,6 +129,7 @@ class OmniauthKeycloak::KeycloakToken
 
   # Get KeycloakToken with passwort grant type
   def self.password(user, password)
+    config = OmniauthKeycloak.config
     client = OAuth2::Client.new(config.client_id, config.client_secret, token_url: config.token_endpoint)
     token  = client.password.get_token(user, password)
     OmniauthKeycloak::KeycloakToken.new(token.token, config)
@@ -129,6 +137,7 @@ class OmniauthKeycloak::KeycloakToken
 
   # Get KeycloakToken with client credentials grant type
   def self.client_credentials
+    config = OmniauthKeycloak.config
     client = OAuth2::Client.new(config.client_id, config.client_secret, token_url: config.token_endpoint)
     token  = client.client_credentials.get_token
     OmniauthKeycloak::KeycloakToken.new(token.token, config)
@@ -140,16 +149,16 @@ class OmniauthKeycloak::KeycloakToken
   # extract all user attributes
   def set_attributes
     @attributes = {}
-    attr = @decoded_token.keys - KEYS.map(&:to_s) - ["allowed-origins"]
+    attr = @decoded_token.keys - KEYS.map(&:to_s) - ['allowed-origins']
     attr.each do |attribute|
       @attributes[attribute] = @decoded_token[attribute]
     end
   end
 
   def decode_token
-    raise InvalidSetup, "Public Key is missing, please check the setup." if @public_key.blank?
-    raise InvalidToken, "no token given" if @token.blank?
+    raise InvalidSetup, 'Public Key is missing, please check the setup.' if @public_key.blank?
+    raise InvalidToken, 'no token given' if @token.blank?
 
-    JWT.decode @token, OpenSSL::PKey::RSA.new(Base64.decode64(@public_key)), true, algorithm: "RS256"
+    JWT.decode @token, OpenSSL::PKey::RSA.new(Base64.decode64(@public_key)), true, algorithm: 'RS256'
   end
 end
