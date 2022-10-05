@@ -53,11 +53,11 @@ class OmniauthKeycloak::Configuration
 
   def discovery_object
     begin
-      ::HTTParty.get(discovery_url) || {}
-    rescue StandardError => e
+      ::HTTParty.get(discovery_url)
+    rescue HTTParty::Error, SocketError => e
       Rails.logger.error e
       puts '[OmniauthKeycloak] auth-server-url is not a valid url'
-      return "#{self.realm_url}/.well-known/openid-configuration"
+      return {}
     end
   end
 
