@@ -57,7 +57,6 @@ class OmniauthKeycloak::Configuration
     rescue StandardError => e
       Rails.logger.error e
       puts '[OmniauthKeycloak] auth-server-url is not a valid url'
-    ensure
       return "#{self.realm_url}/.well-known/openid-configuration"
     end
   end
