@@ -53,7 +53,7 @@ class OmniauthKeycloak::Configuration
 
   def discovery_object
     begin
-      ::HTTParty.get(discovery_url)
+      ::HTTParty.get(discovery_url) || {}
     rescue HTTParty::Error, SocketError => e
       Rails.logger.error e
       puts '[OmniauthKeycloak] auth-server-url is not a valid url'
