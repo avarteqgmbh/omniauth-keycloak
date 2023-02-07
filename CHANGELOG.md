@@ -1,8 +1,4 @@
 # Changelog
-### 2.2.0 -  2023-02-03
-* Feature/int 2283 discovery object rescue (#11)
-* update gems affected by CVEs (#12)
-
 ### 2.1.0 -  2022-10-08
 * BUM-7600 Remove: autoloading routes (#9)
 * update to omniauth 2 and omniauth-oauth 1.8 (#10)
