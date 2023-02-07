@@ -1,6 +1,7 @@
 # Changelog
-### 2.2.0 -  2023-02-03
+### 2.2.0 -  2023-02-07
 * Feature/int 2283 discovery object rescue (#11)
+* update gems affected by CVEs (#12)
 * update gems affected by CVEs (#12)
 
 ### 2.1.0 -  2022-10-08
