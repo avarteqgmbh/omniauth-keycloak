@@ -17,7 +17,7 @@ module OmniauthKeycloak::ControllerHelperMethods
           {
             template:   'layouts/post_redirect',
             layout:     'layouts/blank_oauth',
-            locals: { auth_url: '/auth/keycloak'}
+            locals: { auth_url: '/keycloak'}
           }
         )
         return false
