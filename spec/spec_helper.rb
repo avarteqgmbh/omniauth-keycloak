@@ -3,8 +3,8 @@ ENV['RAILS_ENV'] ||= 'test'
 
 ENV['keycloak_public_key'] ||= 'xxx'
 ENV['keycloak_url'] ||= 'http://localhost-test.de/'
-ENV['keycloak_authorize_url'] ||= 'http://localhost-test.de/auth/'
-ENV['keycloak_token_endpoint'] ||= 'http://localhost-test.de/auth/realms/xxx/protocol/openid-connect/token'
+ENV['keycloak_authorize_url'] ||= 'http://localhost-test.de/'
+ENV['keycloak_token_endpoint'] ||= 'http://localhost-test.de/realms/xxx/protocol/openid-connect/token'
 
 require 'active_support'
 ActiveSupport::Deprecation.silenced = true
