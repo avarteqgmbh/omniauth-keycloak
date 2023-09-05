@@ -6,9 +6,9 @@ class OmniAuth::Strategies::Keycloak < OmniAuth::Strategies::OAuth2
   class InvalidToken < Exception; end
 
   option :client_options, {
-    site: 'http://localhost:8080/auth/realms/master',
-    authorize_url: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
-    token_url: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/token'
+    site: 'http://localhost:8080/realms/master',
+    authorize_url: 'http://localhost:8080/realms/master/protocol/openid-connect/auth',
+    token_url: 'http://localhost:8080/realms/master/protocol/openid-connect/token'
   }
 
   option :public_key

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-keycloak (2.2.0)
+    omniauth-keycloak (2.1.0)
       httparty
       jwt
       omniauth (>= 2.0)

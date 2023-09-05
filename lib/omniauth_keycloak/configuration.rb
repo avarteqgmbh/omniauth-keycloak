@@ -19,8 +19,6 @@ class OmniauthKeycloak::Configuration
              else 
                {}
              end
-
-    detect_server_prefix
   end
 
   def load_routes
@@ -36,7 +34,7 @@ class OmniauthKeycloak::Configuration
   end # #public_key
 
   def client_id
-    ENV["#{@config_prefix}keycloak_client_id"]     || @_oidc['resource']
+    ENV["#{@config_prefix}keycloak_client_id"] || @_oidc['resource']
   end # #client_id
 
   def client_secret
@@ -66,7 +64,7 @@ class OmniauthKeycloak::Configuration
   end # #authorize_url
 
   def realm
-    ENV["#{@config_prefix}keycloak_realm"]         || @_oidc['realm']
+    ENV["#{@config_prefix}keycloak_realm"] || @_oidc['realm']
   end # #realm
 
   def scope
@@ -74,7 +72,7 @@ class OmniauthKeycloak::Configuration
   end # #scope
 
   def server_prefix
-    @_server_prefix ||= ENV["#{@config_prefix}keycloak_server_prefix"] || '/auth'
+    ENV["#{@config_prefix}keycloak_server_prefix"] || ""
   end
 
   def realm_url
@@ -95,7 +93,4 @@ class OmniauthKeycloak::Configuration
   def admin_api(segment)
     URI::join(self.url, "#{self.server_prefix}/admin/realms/", "#{self.realm}/", segment).to_s
   end # #admin_api
-
-  def detect_server_prefix
-  end
 end

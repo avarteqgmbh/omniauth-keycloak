@@ -1,7 +1,10 @@
 # Changelog
+### 3.0.0 -  2023-09-05
+* Feature/int 3092 remove auth from url (#13)
+* Update Readme and documentation (#14)
+
 ### 2.2.0 -  2023-02-07
 * Feature/int 2283 discovery object rescue (#11)
-* update gems affected by CVEs (#12)
 * update gems affected by CVEs (#12)
 
 ### 2.1.0 -  2022-10-08
