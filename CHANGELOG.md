@@ -1,4 +1,7 @@
 # Changelog
+### 3.0.1 -  2024-03-27
+* make post-url for providers configurable
+
 ### 3.0.0 -  2023-09-05
 * Feature/int 3092 remove auth from url (#13)
 * Update Readme and documentation (#14)
