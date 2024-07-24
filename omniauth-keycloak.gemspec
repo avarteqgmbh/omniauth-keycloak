@@ -25,9 +25,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-oauth2', '>= 1.8.0'
   s.add_dependency 'rack', '>= 2.2.8.1'
 
-  s.add_development_dependency 'activesupport', '>=  6.1.7.8'
   s.add_development_dependency 'rails', '>=  6.1.7.8'
-  s.add_development_dependency 'rexml', '>= 3.2.7'
+  s.add_development_dependency 'rexml', '>= 3.3.2'
 
   s.add_development_dependency 'guard-bundler'
   s.add_development_dependency 'guard-rspec'
