@@ -1,4 +1,8 @@
 # Changelog
+### 3.1.0 -  2024-07-25
+* Update Readme and documentation (#14)
+* fix high and moderate cves (#15)
+
 ### 3.0.1 -  2024-03-27
 * make post-url for providers configurable
 
