@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-keycloak (3.1.0)
+    omniauth-keycloak (3.2.0)
       httparty
       jwt
       nokogiri (>= 1.16.5)
@@ -101,10 +101,11 @@ GEM
     diff-lcs (1.5.1)
     drb (2.2.1)
     erubi (1.13.0)
-    faraday (2.10.1)
-      faraday-net_http (>= 2.0, < 3.2)
+    faraday (2.12.0)
+      faraday-net_http (>= 2.0, < 3.4)
+      json
       logger
-    faraday-net_http (3.1.1)
+    faraday-net_http (3.3.0)
       net-http
     ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
@@ -143,14 +144,14 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.7.2)
-    jwt (2.8.2)
+    jwt (2.9.3)
       base64
     language_server-protocol (3.17.0.3)
     listen (2.10.1)
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
-    logger (1.6.0)
+    logger (1.6.1)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -314,9 +315,9 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
-    uri (0.13.0)
+    uri (0.13.1)
     version_gem (1.1.4)
-    webrick (1.8.1)
+    webrick (1.8.2)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)

@@ -1,4 +1,8 @@
 # Changelog
+### 3.2.0 -  2024-10-15
+* feature/INT-4515_fix_CVE-s (#20)
+* bump version
+
 ### 3.1.0 -  2024-07-25
 * Update Readme and documentation (#14)
 * fix high and moderate cves (#15)
