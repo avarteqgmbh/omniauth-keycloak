@@ -1,4 +1,7 @@
 # Changelog
+### 3.3.0 -  2024-11-20
+* bump gems affected by cves (#21)
+
 ### 3.2.0 -  2024-10-15
 * feature/INT-4515_fix_CVE-s (#20)
 * bump version
