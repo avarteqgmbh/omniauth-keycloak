@@ -16,16 +16,16 @@ Gem::Specification.new do |s|
 
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 3.0.0'
+  s.required_ruby_version = '>= 3.1.0'
 
   s.add_dependency 'httparty'
   s.add_dependency 'jwt'
-  s.add_dependency 'nokogiri', '>= 1.16.5'
+  s.add_dependency 'nokogiri', '>= 1.18.3'
   s.add_dependency 'omniauth', '>= 2.1.2'
   s.add_dependency 'omniauth-oauth2', '>= 1.8.0'
   s.add_dependency 'rack', '>= 2.2.8.1'
 
-  s.add_development_dependency 'rails', '~> 7.1.4.1'
+  s.add_development_dependency 'rails', '~> 7.1.5.1'
   s.add_development_dependency 'rexml', '>= 3.3.2'
 
   s.add_development_dependency 'guard-bundler'
