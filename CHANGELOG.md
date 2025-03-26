@@ -1,4 +1,8 @@
 # Changelog
+### 3.4.0 -  2025-03-26
+* bump gems affected by cves (#21)
+* Bump gems affected by CVEs (#23)
+
 ### 3.3.0 -  2024-11-20
 * bump gems affected by cves (#21)
 
