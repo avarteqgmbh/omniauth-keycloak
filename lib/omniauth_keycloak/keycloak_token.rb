@@ -15,12 +15,12 @@ class OmniauthKeycloak::KeycloakToken
 
   class InvalidSetup < RuntimeError
   end
-  KEYS = %i[jti exp iat iss aud sub nbf typ azp nonce session_state client_session allowed_origins resource_access
+  KEYS = %i[jti exp iat iss aud sub nbf typ azp session_state client_session allowed_origins resource_access
             realm_access auth_time acr].freeze
 
   attr_reader :token, :decoded_token, :public_key, :client_id, :client_secret, :keycloak_url, :config
-  # claims see http://openid.net/specs/openid-connect-core-1_0.html#IDToken and additional specifications
-  attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :nonce, :session_state, :client_session,
+
+  attr_accessor :jti, :exp, :iat, :iss, :aud, :sub, :nbf, :typ, :azp, :session_state, :client_session,
                 :allowed_origins, :resource_access, :realm_access, :auth_time, :acr
   attr_accessor :attributes, :refresh_token
 
@@ -113,7 +113,6 @@ class OmniauthKeycloak::KeycloakToken
   def verify!(expected = {})
     expected[:issuer] ||= @keycloak_url
     expected[:client_id] ||= @client_id
-    expected[:nonce] ||= @nonce
 
     raise InvalidToken, "Token expired. is: #{exp}, expected: <= #{Time.now.to_i}" if exp.to_i <= Time.now.to_i
     raise InvalidToken, "Invalid issuer. is: #{iss}, expected: #{expected[:issuer]}" if iss != expected[:issuer]
@@ -122,7 +121,6 @@ class OmniauthKeycloak::KeycloakToken
       raise InvalidToken,
             "Invalid audience. is: #{aud}, expected: #{expected[:client_id]}"
     end
-    raise InvalidToken, "Invalid nonce. is: #{nonce}, expected: #{expected[:nonce]}" if nonce != expected[:nonce]
 
     true
   end
