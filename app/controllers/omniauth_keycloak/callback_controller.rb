@@ -3,14 +3,11 @@ class OmniauthKeycloak::CallbackController <  OmniauthKeycloak::ApplicationContr
   layout false
 
   def callback
-    acess_token 		= env['omniauth.auth']['credentials']['token']
-    nonce           = env['omniauth.auth']['info']['original_nonce']
+    json_web_token 	= env['omniauth.auth']['credentials']['token']
     refresh_token   = env['omniauth.auth']['credentials']['refresh_token']
 
     begin
-      token = OmniauthKeycloak::KeycloakToken.new(acess_token)
-
-      token.verify!(nonce: nonce)
+      token = OmniauthKeycloak::KeycloakToken.new(json_web_token)
 
       if check_client_roles(token) or check_realm_roles(token)
         login(token,refresh_token)

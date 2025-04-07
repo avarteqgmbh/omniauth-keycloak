@@ -168,15 +168,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include OmniauthKeycloak::OmniauthControllerExtension
   skip_before_filter :authenticate
   def callback
-    acess_token 		= env['omniauth.auth']['credentials']['token']
-    nonce           = env['omniauth.auth']['info']['original_nonce']
+    access_token 		= env['omniauth.auth']['credentials']['token']
     refresh_token   = env['omniauth.auth']['credentials']['refresh_token']
 
     user = User.from_omniauth(auth_hash)
 
     begin
-      token = OmniauthKeycloak::KeycloakToken.new(acess_token)
-      token.verify!(nonce: nonce)
+      token = OmniauthKeycloak::KeycloakToken.new(access_token)
 
       if check_client_roles(token) or check_realm_roles(token)
         login(token,refresh_token)
@@ -255,8 +253,7 @@ You need to update your controller callbacks to use the specific confing, instea
       begin
         keycloak_config = ::OmniauthKeycloak::Configuration.new(ENV["#{config_prefix}keycloak_oidc_json"] , config_prefix)
         # additional config setup, like allowed roles
-        token = OmniauthKeycloak::KeycloakToken.new(acess_token, keycloak_config)
-        token.verify!(nonce: nonce)
+        token = OmniauthKeycloak::KeycloakToken.new(access_token, keycloak_config)
       
       if check_client_roles(token, keycloak_config.allowed_client_roles) or check_realm_roles(token, keycloak_config.allowed_realm_roles)
         login(token, refresh_token, keycloak_config.token_cache_expires_in.minutes)

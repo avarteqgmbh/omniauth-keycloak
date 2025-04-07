@@ -36,21 +36,13 @@ class OmniAuth::Strategies::Keycloak < OmniAuth::Strategies::OAuth2
       'iat' => raw_info['iat'],
       'sub' => raw_info['sub'],
       'session_state' => raw_info['session_state'],
-      'client_session' => raw_info['client_session'],
-      'nonce' => raw_info['nonce'],
-      'original_nonce' => session[:nonce]
+      'client_session' => raw_info['client_session']
     }
     hash['realm_access']    = raw_info['realm_access']['roles'] if raw_info['realm_access']
     hash['allowed-origins'] = raw_info['allowed-origins'] if raw_info['allowed-origins']
     hash['resource_access'] = raw_info['resource_access'] if raw_info['resource_access']
 
     hash
-  end
-
-  def request_phase
-    session[:nonce] = SecureRandom.hex(24)
-    options.authorize_params[:nonce] = session[:nonce]
-    super
   end
 
   # NOTE: the callback url get called twice, in request_phase and callback_phase
@@ -93,8 +85,7 @@ class OmniAuth::Strategies::Keycloak < OmniAuth::Strategies::OAuth2
     raise InvalidToken, 'Invalid ID Token' unless
       raw_info['exp'].to_i > Time.now.to_i &&
       raw_info['iss'] == expected[:issuer] &&
-      Array(raw_info['aud']).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
-      raw_info['nonce'] == expected[:nonce]
+      Array(raw_info['aud']).include?(expected[:client_id]) # aud(ience) can be a string or an array of strings
   end
 
   OmniAuth.config.add_camelization('keycloak', 'Keycloak')
