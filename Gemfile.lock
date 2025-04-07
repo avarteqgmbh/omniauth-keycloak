@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-keycloak (3.3.0)
+    omniauth-keycloak (3.4.0)
       httparty
       jwt
       nokogiri (>= 1.18.3)
