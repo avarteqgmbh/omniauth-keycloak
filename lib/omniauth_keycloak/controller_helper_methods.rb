@@ -33,6 +33,11 @@ module OmniauthKeycloak::ControllerHelperMethods
     end
 
     def cached_token
+      unless session[:omniauth_keycloak_sub]
+        OmniauthKeycloak.log('No session initiated')
+        return nil
+      end
+
       OmniauthKeycloak.log("Fetch #{session[:omniauth_keycloak_sub]}")
       token = Rails.cache.fetch(session[:omniauth_keycloak_sub])
       unless token
@@ -54,15 +59,15 @@ module OmniauthKeycloak::ControllerHelperMethods
         new_token.verify!
         Rails.cache.write(new_token.sub, new_token, expires_in: OmniauthKeycloak.config.token_cache_expires_in)
         return new_token
-      rescue OmniauthKeycloak::KeycloakToken::InvalidToken => e
+      rescue OmniauthKeycloak::KeycloakToken::InvalidToken
         flash[:error] = 'token verification failure'
         render template: 'layouts/error'
-      rescue OAuth2::Error => e
+      rescue OAuth2::Error
         # Refresh Token expired, neues Access Token bei Keycloak anfordern
         # Aktion des Users muss neu gestartet werden
         clear_session
         return
-      rescue JWT::VerificationError => e
+      rescue JWT::VerificationError
         # Signatur des Access Tokens ungültig
         clear_session
         return
