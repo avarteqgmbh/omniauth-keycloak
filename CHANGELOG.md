@@ -1,4 +1,7 @@
 # Changelog
+### 3.5.1 -  2025-05-07
+* fix Rails.cache.fetch compatibiltiy with newer rails version when key is nil
+
 ### 3.5.0 -  2025-04-07
 * Bump gems affected by CVEs (#23)
 * Feature/int 4538 remove nonce claim from access token (#22)
