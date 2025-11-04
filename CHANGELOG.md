@@ -1,4 +1,8 @@
 # Changelog
+### 3.7.0 -  2025-11-04
+* Bump gems affected by CVEs (#24)
+* Bump gems affected by CVEs (#26)
+
 ### 3.6.0 -  2025-05-14
 * Feature/int 4538 remove nonce claim from access token (#22)
 * Bump gems affected by CVEs (#24)
