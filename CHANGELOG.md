@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.1 -  2025-12-01
+* only apply excepts for before_action if method defined
+
 ### 3.7.0 -  2025-11-04
 * Bump gems affected by CVEs (#24)
 * Bump gems affected by CVEs (#26)
