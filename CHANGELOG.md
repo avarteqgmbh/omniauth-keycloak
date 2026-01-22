@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.2 -  2026-01-22
+* update httparty
+
 ### 3.7.1 -  2025-12-01
 * only apply excepts for before_action if method defined
 
