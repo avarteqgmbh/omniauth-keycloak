@@ -11,6 +11,7 @@ module OmniauthKeycloak
   autoload :SharedControllerMethods,     File.expand_path('omniauth_keycloak/shared_controller_methods', __dir__)
   autoload :ControllerHelperMethods,     File.expand_path('omniauth_keycloak/controller_helper_methods', __dir__)
   autoload :Rack,                        File.expand_path('omniauth_keycloak/rack', __dir__)
+  autoload :FaultyConfigException,       File.expand_path('omniauth_keycloak/faulty_config_exception', __dir__)
 
   autoload :ApplicationController,
            File.expand_path('../app/controllers/omniauth_keycloak/application_controller', __dir__)

@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.3 -  2026-02-18
+* fix problems through infinit callback loops
+
 ### 3.7.2 -  2026-01-22
 * update httparty
 
