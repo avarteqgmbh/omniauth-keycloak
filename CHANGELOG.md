@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.4 -  2026-02-25
+* updwate nokogiri
+
 ### 3.7.3 -  2026-02-18
 * fix problems through infinit callback loops
 
