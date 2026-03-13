@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.5 -  2026-03-13
+* increase basic ruby version for nokogiri
+
 ### 3.7.4 -  2026-02-25
 * updwate nokogiri
 
