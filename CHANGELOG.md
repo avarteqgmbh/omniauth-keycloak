@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.6 -  2026-06-03
+* bump gem versions
+
 ### 3.7.5 -  2026-03-13
 * increase basic ruby version for nokogiri
 

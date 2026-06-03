@@ -25,12 +25,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-oauth2', '>= 1.8.0'
   s.add_dependency 'rack', '>= 3.1.18'
 
-  s.add_development_dependency 'rails', '~> 7.1.5.2'
+  s.add_development_dependency 'rails', '>= 7.2.3.1'
   s.add_development_dependency 'rexml', '>= 3.3.2'
 
   s.add_development_dependency 'guard-bundler'
   s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency 'listen', '2.10.1'
+  s.add_development_dependency 'listen'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-rails'
 end
