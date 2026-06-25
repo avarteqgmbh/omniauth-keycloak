@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.7 -  2026-06-25
+* cve fixes
+
 ### 3.7.6 -  2026-06-03
 * bump gem versions
 
