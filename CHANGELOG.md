@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.8 -  2026-08-03
+* bundle update
+
 ### 3.7.7 -  2026-06-25
 * cve fixes
 
