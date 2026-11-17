@@ -1,4 +1,7 @@
 # Changelog
+### 3.7.9 -  2026-11-17
+* version bump
+
 ### 3.7.8 -  2026-08-03
 * bundle update
 
